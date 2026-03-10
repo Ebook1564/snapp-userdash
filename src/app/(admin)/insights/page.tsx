@@ -1,103 +1,21 @@
 "use client";
 
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
+import {
+  GAME_PERFORMANCE,
+  GAME_RANKINGS,
+  DASHBOARD_METRICS
+} from "@/lib/mock-data";
+import { downloadCSV } from "@/lib/csv-utils";
 
-type GamePerformance = {
-  game: string;
-  dau: number;
-  retention: {
-    d1: number;
-    d7: number;
-    d30: number;
-  };
-  revenue: number;
-  rating: number;
-  status: "excellent" | "good" | "needs-improvement";
-};
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
-type TopGame = {
-  rank: number;
-  game: string;
-  totalRevenue: number;
-  totalPlayers: number;
-  avgSessionTime: number;
-  conversionRate: number;
-  trend: "up" | "down" | "stable";
-};
-
-const gamePerformance: GamePerformance[] = [
-  {
-    game: "Galaxy Runner",
-    dau: 24500,
-    retention: { d1: 42.3, d7: 28.5, d30: 15.2 },
-    revenue: 18500,
-    rating: 4.8,
-    status: "excellent",
-  },
-  {
-    game: "Nova Slots",
-    dau: 18900,
-    retention: { d1: 38.7, d7: 24.1, d30: 12.8 },
-    revenue: 14200,
-    rating: 4.6,
-    status: "excellent",
-  },
-  {
-    game: "Puzzle Forge",
-    dau: 12300,
-    retention: { d1: 35.2, d7: 20.3, d30: 10.5 },
-    revenue: 9100,
-    rating: 4.3,
-    status: "good",
-  },
-  {
-    game: "Drift Arena",
-    dau: 8700,
-    retention: { d1: 32.1, d7: 18.7, d30: 9.2 },
-    revenue: 6500,
-    rating: 4.1,
-    status: "needs-improvement",
-  },
-];
-
-const topGames: TopGame[] = [
-  {
-    rank: 1,
-    game: "Galaxy Runner",
-    totalRevenue: 18500,
-    totalPlayers: 24500,
-    avgSessionTime: 24,
-    conversionRate: 4.1,
-    trend: "up",
-  },
-  {
-    rank: 2,
-    game: "Nova Slots",
-    totalRevenue: 14200,
-    totalPlayers: 18900,
-    avgSessionTime: 31,
-    conversionRate: 6.3,
-    trend: "up",
-  },
-  {
-    rank: 3,
-    game: "Puzzle Forge",
-    totalRevenue: 9100,
-    totalPlayers: 12300,
-    avgSessionTime: 18,
-    conversionRate: 2.7,
-    trend: "stable",
-  },
-  {
-    rank: 4,
-    game: "Drift Arena",
-    totalRevenue: 6500,
-    totalPlayers: 8700,
-    avgSessionTime: 22,
-    conversionRate: 2.1,
-    trend: "down",
-  },
-];
+const gamePerformance = GAME_PERFORMANCE;
+const topGames = GAME_RANKINGS;
+const dashboardMetrics = DASHBOARD_METRICS;
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -141,73 +59,18 @@ export default function InsightsPage() {
 
   const exportToCSV = () => {
     setIsExporting(true);
-    
     try {
-      // Prepare CSV data
-      const csvRows: string[] = [];
-      
-      // Add header
-      csvRows.push("Insights Report");
-      csvRows.push(`Date Range: ${dateRange}`);
-      csvRows.push(`Generated: ${new Date().toLocaleString()}`);
-      csvRows.push("");
-      
-      // Summary metrics
-      csvRows.push("SUMMARY METRICS");
-      csvRows.push("Metric,Value,Change");
-      csvRows.push(`Total DAU,64400,+8.2% vs last month`);
-      csvRows.push(`Avg. D1 Retention,37.1%,+2.3 pts vs last month`);
-      csvRows.push(`Total Revenue,$48300,+12.4% vs last month`);
-      csvRows.push(`Avg. Rating,4.5,Across all games`);
-      csvRows.push("");
-      
-      // Top Game
-      csvRows.push("TOP PERFORMING GAME");
-      csvRows.push("Metric,Value");
-      csvRows.push(`Game,${topGame.game}`);
-      csvRows.push(`Total Revenue,$${topGame.totalRevenue.toLocaleString()}`);
-      csvRows.push(`Total Players,${topGame.totalPlayers.toLocaleString()}`);
-      csvRows.push(`Avg. Session Time,${topGame.avgSessionTime} minutes`);
-      csvRows.push(`Conversion Rate,${topGame.conversionRate}%`);
-      csvRows.push("");
-      
-      // Game Performance Metrics
-      csvRows.push("GAME PERFORMANCE METRICS");
-      csvRows.push("Game,DAU,D1 Retention,D7 Retention,D30 Retention,Revenue,Rating,Status");
-      gamePerformance.forEach((game) => {
-        csvRows.push(
-          `"${game.game}",${game.dau},${game.retention.d1}%,${game.retention.d7}%,${game.retention.d30}%,$${game.revenue.toLocaleString()},${game.rating},${game.status}`
-        );
-      });
-      csvRows.push("");
-      
-      // Game Rankings
-      csvRows.push("GAME RANKINGS");
-      csvRows.push("Rank,Game,Total Revenue,Total Players,Avg. Session Time,Conversion Rate,Trend");
-      topGames.forEach((game) => {
-        csvRows.push(
-          `${game.rank},"${game.game}",$${game.totalRevenue.toLocaleString()},${game.totalPlayers.toLocaleString()},${game.avgSessionTime} minutes,${game.conversionRate}%,${game.trend}`
-        );
-      });
-      
-      // Convert to CSV string
-      const csvContent = csvRows.join("\n");
-      
-      // Create blob and download
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const link = document.createElement("a");
-      const url = URL.createObjectURL(blob);
-      
-      link.setAttribute("href", url);
-      link.setAttribute("download", `insights-report-${dateRange.toLowerCase().replace(/\s+/g, "-")}-${new Date().toISOString().split("T")[0]}.csv`);
-      link.style.visibility = "hidden";
-      
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      
-      // Clean up
-      URL.revokeObjectURL(url);
+      // Export game performance
+      downloadCSV(gamePerformance.map(g => ({
+        Game: g.game,
+        DAU: g.dau,
+        'D1 Retention': `${g.retention.d1}%`,
+        'D7 Retention': `${g.retention.d7}%`,
+        'D30 Retention': `${g.retention.d30}%`,
+        Revenue: g.revenue,
+        Rating: g.rating,
+        Status: g.status
+      })), `game-performance-${new Date().toISOString().split('T')[0]}`);
     } catch (error) {
       console.error("Error exporting report:", error);
       alert("Failed to export report. Please try again.");
@@ -230,7 +93,7 @@ export default function InsightsPage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
-          <select 
+          <select
             value={dateRange}
             onChange={(e) => setDateRange(e.target.value)}
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:focus:border-brand-500"
@@ -240,7 +103,7 @@ export default function InsightsPage() {
             <option>Last 90 days</option>
             <option>All time</option>
           </select>
-          <button 
+          <button
             onClick={exportToCSV}
             disabled={isExporting}
             className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-white/5 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center gap-2"
@@ -349,10 +212,10 @@ export default function InsightsPage() {
             Total Revenue
           </p>
           <p className="mt-2 text-xl font-semibold text-gray-900 dark:text-white/90">
-            $48,300
+            {dashboardMetrics.mrr.value}
           </p>
           <p className="mt-1 text-xs font-medium text-success-600 dark:text-success-400">
-            +12.4% vs last month
+            {dashboardMetrics.mrr.delta}
           </p>
         </div>
 
@@ -456,23 +319,21 @@ export default function InsightsPage() {
                   {topGames.map((game) => (
                     <tr
                       key={game.rank}
-                      className={`border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors ${
-                        game.rank === 1
-                          ? "bg-brand-50/50 dark:bg-brand-500/5"
-                          : ""
-                      }`}
+                      className={`border-b border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors ${game.rank === 1
+                        ? "bg-brand-50/50 dark:bg-brand-500/5"
+                        : ""
+                        }`}
                     >
                       <td className="py-3 pr-4">
                         <span
-                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${
-                            game.rank === 1
-                              ? "bg-brand-500 text-white"
-                              : game.rank === 2
+                          className={`inline-flex items-center justify-center w-6 h-6 rounded-full text-xs font-bold ${game.rank === 1
+                            ? "bg-brand-500 text-white"
+                            : game.rank === 2
                               ? "bg-gray-400 text-white"
                               : game.rank === 3
-                              ? "bg-orange-400 text-white"
-                              : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
-                          }`}
+                                ? "bg-orange-400 text-white"
+                                : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300"
+                            }`}
                         >
                           {game.rank}
                         </span>
@@ -514,19 +375,36 @@ export default function InsightsPage() {
             Track how player retention evolves over time. Focus on improving D1
             retention for better long-term performance.
           </p>
-          <div className="mt-4 h-32 flex items-end gap-2">
-            {gamePerformance.map((game, idx) => (
-              <div key={game.game} className="flex-1 flex flex-col gap-1">
-                <div
-                  className="w-full rounded-t bg-brand-500/80 dark:bg-brand-500/60"
-                  style={{ height: `${game.retention.d1}%` }}
-                  title={`${game.game}: ${game.retention.d1}%`}
-                />
-                <span className="text-[10px] text-gray-500 dark:text-gray-400 text-center">
-                  {game.game.split(" ")[0]}
-                </span>
-              </div>
-            ))}
+          <div className="mt-4 min-h-[200px]">
+            <ReactApexChart
+              options={{
+                chart: { type: "bar", toolbar: { show: false }, stacked: false },
+                colors: ["#3c50e0", "#80caee", "#10b981"],
+                plotOptions: {
+                  bar: {
+                    horizontal: false,
+                    columnWidth: "55%",
+                    borderRadius: 4,
+                  },
+                },
+                xaxis: {
+                  categories: gamePerformance.map((g) => g.game.split(" ")[0]),
+                },
+                yaxis: {
+                  title: { text: "Retention (%)" },
+                  max: 100,
+                },
+                legend: { position: "top" },
+                tooltip: { y: { formatter: (val) => `${val}%` } },
+              }}
+              series={[
+                { name: "D1", data: gamePerformance.map((g) => g.retention.d1) },
+                { name: "D7", data: gamePerformance.map((g) => g.retention.d7) },
+                { name: "D30", data: gamePerformance.map((g) => g.retention.d30) },
+              ]}
+              type="bar"
+              height={220}
+            />
           </div>
         </div>
 

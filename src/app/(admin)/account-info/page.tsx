@@ -5,7 +5,7 @@ import { useUser } from "@/context/UserContext";
 import Button from "@/components/ui/button/Button";
 
 export default function AccountInfoPage() {
-  const { clientName, clientEmail } = useUser();
+  const { clientName, clientEmail, setClientCountry } = useUser();
   const [userProfile, setUserProfile] = useState<{
     id?: number | string | null;
     first_name?: string | null;
@@ -49,9 +49,14 @@ export default function AccountInfoPage() {
           return;
         }
 
-  // merge mapped user + rawRow so username (or other raw fields) are available client-side
-  const merged = { ...(data.user || {}), ...(data.rawRow || {}) };
-  setUserProfile(merged);
+        // merge mapped user + rawRow so username (or other raw fields) are available client-side
+        const merged = { ...(data.user || {}), ...(data.rawRow || {}) };
+        setUserProfile(merged);
+
+        // Update global context with country information
+        if (merged.country_name || merged.country) {
+          setClientCountry(merged.country_name || merged.country);
+        }
       } catch (err) {
         console.error("Error fetching profile:", err);
         setProfileError((err as Error).message || "Error fetching profile");
@@ -66,7 +71,7 @@ export default function AccountInfoPage() {
   // Only show the requested personal information fields
   const personalFields = [
     { label: "First Name", value: (userProfile as any).username || (userProfile as any).user_name || userProfile.first_name || clientName || "-" },
-  { label: "Email address", value: (userProfile as any).useremail || userProfile.email || clientEmail || "-" },
+    { label: "Email address", value: (userProfile as any).useremail || userProfile.email || clientEmail || "-" },
     {
       label: "Phone",
       value:
@@ -120,11 +125,7 @@ export default function AccountInfoPage() {
               <div className="text-sm text-gray-900 dark:text-white/90">{userProfile.country_name || userProfile.country || "-"}</div>
             </div>
 
-            {/* Row: Contracting Entity */}
-            <div className="flex items-center justify-between">
-              <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">Contracting Entity</div>
-              <div className="text-sm text-gray-900 dark:text-white/90">{(userProfile as any).contracting_entity || "Demo Company Inc. | US"}</div>
-            </div>
+
           </div>
         </div>
       </div>

@@ -30,15 +30,19 @@ type NavItem = {
    ======================= */
 const navItems: NavItem[] = [
   {
-    icon: <GridIcon className="w-5 h-5 flex-shrink-0" />,
-    name: "Dashboard",
-    path: "/Dashboard",
-  },
-  {
-    name: "Insights",
     icon: <PieChartIcon className="w-5 h-5 flex-shrink-0" />,
-    path: "/insights",
+    name: "Revenue Metrics",
+    subItems: [
+      { name: "Reports", path: "/" },
+      { name: "Payments", path: "/payments" },
+      { name: "Scheduled Reports", path: "/scheduled-reports" },
+    ],
   },
+  // {
+  //   name: "Insights",
+  //   icon: <GridIcon className="w-5 h-5 flex-shrink-0" />,
+  //   path: "/insights",
+  // },
   {
     icon: <FolderIcon className="w-5 h-5 flex-shrink-0" />,
     name: "Creatives Library",
@@ -64,7 +68,7 @@ const navItems: NavItem[] = [
 /* =======================
    SUPPORT
    ======================= */
-   
+
 const othersItems: NavItem[] = [
   {
     name: "Support Center",
@@ -143,25 +147,23 @@ const AppSidebar: React.FC = () => {
 
   const renderMenuItems = (items: NavItem[], menuType: "main" | "others") => {
     const isCollapsed = !isExpanded && !isHovered && !isMobileOpen;
-    
+
     return (
       <ul className="flex flex-col gap-1.5">
         {items.map((nav, index) => {
           const isDropdown = !!nav.subItems;
           const isItemActive = isDropdown
             ? (openSubmenu?.type === menuType && openSubmenu?.index === index) ||
-              nav.subItems?.some((sub) => isActive(sub.path))
+            nav.subItems?.some((sub) => isActive(sub.path))
             : isActive(nav.path || "");
 
-          const baseClasses = `relative flex items-center w-full h-10 px-3 font-medium rounded-lg transition-all duration-200 cursor-pointer ${
-            isItemActive
-              ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
-              : "text-blue-200 hover:bg-blue-800/30 hover:text-white"
-          } ${
-            isCollapsed
+          const baseClasses = `relative flex items-center w-full h-10 px-3 font-medium rounded-lg transition-all duration-200 cursor-pointer ${isItemActive
+            ? "bg-orange-500 text-white shadow-md shadow-orange-500/20"
+            : "text-blue-200 hover:bg-blue-800/30 hover:text-white"
+            } ${isCollapsed
               ? "lg:justify-center lg:px-2.5"
-              : "lg:justify-start gap-3"
-          }`;
+              : "lg:justify-start gap-2"
+            }`;
 
           const iconClasses = "flex items-center justify-center flex-shrink-0 w-5 h-5 min-w-[20px] min-h-[20px] text-current [&>svg]:w-full [&>svg]:h-full [&>svg]:text-current";
 
@@ -177,16 +179,15 @@ const AppSidebar: React.FC = () => {
                   <span className={iconClasses}>{nav.icon}</span>
                   {!isCollapsed && (
                     <>
-                      <span className="flex-1 text-sm font-medium truncate min-w-0 leading-normal">
+                      <span className="text-sm font-medium truncate min-w-0 leading-normal group-hover:pl-0 transition-all">
                         {nav.name}
                       </span>
                       <ChevronDownIcon
-                        className={`ml-auto h-4 w-4 transition-all duration-200 flex-shrink-0 text-current ${
-                          (openSubmenu?.type === menuType && openSubmenu?.index === index) ||
+                        className={`ml-1.5 h-3.5 w-3.5 transition-all duration-200 flex-shrink-0 text-current ${(openSubmenu?.type === menuType && openSubmenu?.index === index) ||
                           nav.subItems?.some((sub) => isActive(sub.path))
-                            ? "rotate-180"
-                            : ""
-                        }`}
+                          ? "rotate-180"
+                          : ""
+                          }`}
                       />
                     </>
                   )}
@@ -197,7 +198,7 @@ const AppSidebar: React.FC = () => {
                   <Link href={nav.path} className={baseClasses}>
                     <span className={iconClasses}>{nav.icon}</span>
                     {!isCollapsed && (
-                      <span className="flex-1 text-sm font-medium truncate min-w-0 leading-normal">
+                      <span className="text-sm font-medium truncate min-w-0 leading-normal">
                         {nav.name}
                       </span>
                     )}
@@ -224,11 +225,10 @@ const AppSidebar: React.FC = () => {
                       <li key={sub.name} className="w-full">
                         <Link
                           href={sub.path}
-                          className={`flex items-center w-full h-9 gap-2.5 rounded-lg px-3 text-sm font-medium transition-all duration-200 cursor-pointer ${
-                            isActive(sub.path)
-                              ? "bg-orange-500/80 text-white shadow-sm"
-                              : "text-blue-200/80 hover:bg-blue-800/20 hover:text-white"
-                          }`}
+                          className={`flex items-center w-full h-9 gap-2.5 rounded-lg px-3 text-sm font-medium transition-all duration-200 cursor-pointer ${isActive(sub.path)
+                            ? "bg-orange-500/80 text-white shadow-sm"
+                            : "text-blue-200/80 hover:bg-blue-800/20 hover:text-white"
+                            }`}
                         >
                           <span className="w-1.5 h-1.5 rounded-full bg-current opacity-50 flex-shrink-0"></span>
                           <span className="flex-1 truncate min-w-0 leading-normal">{sub.name}</span>
@@ -248,10 +248,9 @@ const AppSidebar: React.FC = () => {
   return (
     <aside
       className={`fixed top-0 left-0 mt-14 sm:mt-16 lg:mt-0 h-[calc(100vh-3.5rem)] sm:h-[calc(100vh-4rem)] lg:h-screen border-r border-blue-900/20 bg-gradient-to-b from-blue-950 to-blue-900 px-3 sm:px-3 md:px-4 pt-3 sm:pt-4 md:pt-5 text-white shadow-lg transition-all duration-300 ease-in-out z-50
-        ${
-          isExpanded || isMobileOpen
-            ? "w-[260px] sm:w-[280px] md:w-[290px]"
-            : isHovered
+        ${isExpanded || isMobileOpen
+          ? "w-[260px] sm:w-[280px] md:w-[290px]"
+          : isHovered
             ? "w-[260px] sm:w-[280px] md:w-[290px]"
             : "w-[70px] sm:w-[80px] md:w-[90px]"
         }
@@ -260,31 +259,23 @@ const AppSidebar: React.FC = () => {
       onMouseEnter={() => !isExpanded && setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {/* BRAND SECTION */}
+      {/* BRAND & USER SECTION */}
       <div className="space-y-3 sm:space-y-4">
-        {/* Brand/Title */}
         <div className={`${!isExpanded && !isHovered && !isMobileOpen ? "flex items-center justify-center" : ""}`}>
           {(isExpanded || isHovered || isMobileOpen) ? (
-            <div>
-              <h2 className="text-lg sm:text-xl font-bold text-white">
-                SnappGame Business
+            <div className="pb-2 border-b border-blue-800/50">
+              <h2 className="text-base sm:text-lg font-bold text-white truncate">
+                {clientName}
               </h2>
             </div>
           ) : (
             <div className="flex items-center justify-center">
-              <div className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg bg-white/10 flex items-center justify-center border border-white/20">
-                <span className="text-base sm:text-lg font-bold text-white">S</span>
+              <div className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 rounded-lg bg-orange-500 flex items-center justify-center shadow-lg shadow-orange-500/20">
+                <span className="text-base sm:text-lg font-bold text-white uppercase">{clientName.charAt(0)}</span>
               </div>
             </div>
           )}
         </div>
-
-        {/* User Name */}
-        {(isExpanded || isHovered || isMobileOpen) && (
-          <div className="pt-2 border-t border-blue-800/50">
-            <p className="text-xs sm:text-sm text-blue-200">{clientName}</p>
-          </div>
-        )}
       </div>
 
       {/* NAVIGATION */}

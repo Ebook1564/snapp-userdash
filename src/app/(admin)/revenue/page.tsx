@@ -1,79 +1,31 @@
 "use client";
 
 import React from "react";
+import dynamic from "next/dynamic";
+import { DASHBOARD_METRICS, TREND_DATA, REVENUE_BY_GAME, REVENUE_BY_GEO, MONETIZATION_FUNNEL } from "@/lib/mock-data";
+import { downloadCSV } from "@/lib/csv-utils";
 
-type RevenueSummary = {
-  label: string;
-  value: string;
-  delta: string;
-  deltaType: "up" | "down" | "neutral";
-};
+const ReactApexChart = dynamic(() => import("react-apexcharts"), {
+  ssr: false,
+});
 
-type RevenueByGame = {
-  game: string;
-  mrr: number;
-  arpdaU: number;
-  payers: number;
-  conversion: number; // %
-};
-
-type RevenueByGeo = {
-  region: string;
-  mrr: number;
-  arpdaU: number;
-};
-
-const summaryCards: RevenueSummary[] = [
-  {
-    label: "Monthly Recurring Revenue (MRR)",
-    value: "$48,300",
-    delta: "+12.4% vs last month",
-    deltaType: "up",
-  },
-  {
-    label: "Average Revenue / DAU (ARPDAU)",
-    value: "$0.43",
-    delta: "+7.1% vs last week",
-    deltaType: "up",
-  },
-  {
-    label: "Paying Users",
-    value: "3,280",
-    delta: "+4.3% vs last month",
-    deltaType: "up",
-  },
-  {
-    label: "Churn Rate",
-    value: "3.1%",
-    delta: "-0.6 pts vs last month",
-    deltaType: "down",
-  },
+const summaryCards = [
+  DASHBOARD_METRICS.mrr,
+  DASHBOARD_METRICS.arpdau,
+  DASHBOARD_METRICS.payers,
+  DASHBOARD_METRICS.churn,
 ];
 
-const revenueByGame: RevenueByGame[] = [
-  { game: "Galaxy Runner", mrr: 18500, arpdaU: 0.52, payers: 1450, conversion: 4.1 },
-  { game: "Nova Slots", mrr: 14200, arpdaU: 0.71, payers: 980, conversion: 6.3 },
-  { game: "Puzzle Forge", mrr: 9100, arpdaU: 0.31, payers: 540, conversion: 2.7 },
-  { game: "Drift Arena", mrr: 6500, arpdaU: 0.28, payers: 310, conversion: 2.1 },
-];
-
-const revenueByGeo: RevenueByGeo[] = [
-  { region: "North America", mrr: 19500, arpdaU: 0.61 },
-  { region: "Europe", mrr: 13800, arpdaU: 0.47 },
-  { region: "Asia", mrr: 10200, arpdaU: 0.36 },
-  { region: "Latin America", mrr: 4800, arpdaU: 0.29 },
-];
-
-const mockTrendData = [
-  { month: "Jan", mrr: 32000, dau: 72000 },
-  { month: "Feb", mrr: 34500, dau: 76000 },
-  { month: "Mar", mrr: 37100, dau: 81000 },
-  { month: "Apr", mrr: 40400, dau: 86000 },
-  { month: "May", mrr: 42900, dau: 91000 },
-  { month: "Jun", mrr: 48300, dau: 97500 },
-];
+const revenueByGame = REVENUE_BY_GAME;
+const revenueByGeo = REVENUE_BY_GEO;
+const mockTrendData = TREND_DATA;
+const funnelData = MONETIZATION_FUNNEL;
 
 export default function RevenuePage() {
+  const handleExportCSV = () => {
+    downloadCSV(TREND_DATA, `revenue-report-${new Date().toISOString().split('T')[0]}`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -94,7 +46,10 @@ export default function RevenuePage() {
             <option>Last 90 days</option>
             <option>Year to date</option>
           </select>
-          <button className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-white/5">
+          <button
+            onClick={handleExportCSV}
+            className="rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm text-gray-700 shadow-sm hover:bg-gray-50 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:hover:bg-white/5"
+          >
             Export CSV
           </button>
         </div>
@@ -114,13 +69,12 @@ export default function RevenuePage() {
               {card.value}
             </p>
             <p
-              className={`mt-1 text-xs font-medium ${
-                card.deltaType === "up"
-                  ? "text-success-600 dark:text-success-400"
-                  : card.deltaType === "down"
+              className={`mt-1 text-xs font-medium ${card.deltaType === "up"
+                ? "text-success-600 dark:text-success-400"
+                : card.deltaType === "down"
                   ? "text-error-600 dark:text-error-400"
                   : "text-gray-500 dark:text-gray-400"
-              }`}
+                }`}
             >
               {card.delta}
             </p>
@@ -147,43 +101,45 @@ export default function RevenuePage() {
           </div>
 
           {/* Simple trend visualization using bars/lines via divs (placeholder) */}
-          <div className="mt-4">
-            <div className="flex items-end gap-2 h-40">
-              {mockTrendData.map((point) => {
-                const mrrHeight = (point.mrr / 50000) * 100;
-                const dauHeight = (point.dau / 100000) * 100;
-                return (
-                  <div key={point.month} className="flex flex-col items-center flex-1 gap-1">
-                    <div className="flex items-end gap-1 w-full">
-                      <div
-                        className="flex-1 rounded-t bg-brand-500/80 dark:bg-brand-500/60"
-                        style={{ height: `${mrrHeight}%` }}
-                        title={`MRR: ${point.mrr.toLocaleString()}`}
-                      />
-                      <div
-                        className="flex-1 rounded-t bg-blue-light-400/60 dark:bg-blue-light-400/40"
-                        style={{ height: `${dauHeight}%` }}
-                        title={`DAU: ${point.dau.toLocaleString()}`}
-                      />
-                    </div>
-                    <span className="mt-1 text-[10px] text-gray-500 dark:text-gray-400">
-                      {point.month}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div className="mt-3 flex items-center justify-end gap-4 text-[11px] text-gray-500 dark:text-gray-400">
-              <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded-full bg-brand-500" />
-                <span>MRR</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="h-2 w-2 rounded-full bg-blue-light-400" />
-                <span>DAU</span>
-              </div>
-            </div>
+          <div className="mt-4 min-h-[200px]">
+            <ReactApexChart
+              options={{
+                chart: {
+                  type: "area",
+                  toolbar: { show: false },
+                  fontFamily: "inherit",
+                },
+                stroke: { curve: "smooth", width: 2 },
+                fill: {
+                  type: "gradient",
+                  gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.45,
+                    opacityTo: 0.05,
+                    stops: [20, 100],
+                  },
+                },
+                colors: ["#3c50e0", "#80caee"],
+                xaxis: {
+                  categories: mockTrendData.map((d) => d.month),
+                  axisBorder: { show: false },
+                  axisTicks: { show: false },
+                },
+                yaxis: {
+                  labels: {
+                    formatter: (val: number) => (val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val.toString()),
+                  },
+                },
+                legend: { position: "top", horizontalAlign: "right" },
+                grid: { borderColor: "rgba(0,0,0,0.05)" },
+              }}
+              series={[
+                { name: "MRR", data: mockTrendData.map((d) => d.mrr) },
+                { name: "DAU", data: mockTrendData.map((d) => d.dau) },
+              ]}
+              type="area"
+              height={220}
+            />
           </div>
         </div>
 
@@ -196,24 +152,24 @@ export default function RevenuePage() {
             See how players move from installs to payers.
           </p>
 
-          <ul className="space-y-3 text-xs">
-            <li className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">Installs (last 30d)</span>
-              <span className="font-medium text-gray-900 dark:text-white/90">82,400</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">D1 retained</span>
-              <span className="font-medium text-gray-900 dark:text-white/90">31,800 (38.6%)</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">DAU (avg)</span>
-              <span className="font-medium text-gray-900 dark:text-white/90">97,500</span>
-            </li>
-            <li className="flex items-center justify-between">
-              <span className="text-gray-500 dark:text-gray-400">Payers</span>
-              <span className="font-medium text-gray-900 dark:text-white/90">3,280 (3.4%)</span>
-            </li>
-          </ul>
+          <div className="mt-6 space-y-4">
+            {funnelData.map((item, idx) => (
+              <div key={item.label} className="space-y-1">
+                <div className="flex justify-between text-[11px]">
+                  <span className="text-gray-500 dark:text-gray-400">{item.label}</span>
+                  <span className="font-semibold text-gray-900 dark:text-white/90">
+                    {item.value} {item.subValue && `(${item.subValue})`}
+                  </span>
+                </div>
+                <div className="h-1.5 w-full rounded-full bg-gray-100 dark:bg-gray-800">
+                  <div
+                    className="h-1.5 rounded-full bg-brand-500"
+                    style={{ width: `${100 - (idx * 25)}%`, opacity: 1 - (idx * 0.2) }}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
 
           <div className="mt-4 h-2 w-full rounded-full bg-gray-100 dark:bg-gray-800">
             <div className="h-2 rounded-full bg-brand-500" style={{ width: "35%" }} />

@@ -1,925 +1,217 @@
 "use client";
 
-import React, { useState } from "react";
-import { CopyIcon, ArrowRightIcon } from "@/icons";
+import React, { useState, useEffect } from "react";
 
-type DocSection = {
-  id: string;
-  title: string;
-  icon: string;
-  subsections: {
-    id: string;
-    title: string;
-    content: React.ReactNode;
-  }[];
-};
-
-const documentation: DocSection[] = [
-  {
-    id: "getting-started",
-    title: "Getting Started",
-    icon: "🚀",
-    subsections: [
-      {
-        id: "introduction",
-        title: "Introduction",
-        content: (
-          <div className="space-y-4">
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Welcome to the SnappGame Developer Documentation. This guide will help you integrate
-              our platform into your games and start monetizing your content effectively.
-            </p>
-            <div className="rounded-lg border border-brand-200 bg-brand-50 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
-              <h4 className="mb-2 text-sm font-semibold text-brand-900 dark:text-brand-400">
-                Quick Start
-              </h4>
-              <p className="text-xs text-brand-700 dark:text-brand-400">
-                Get up and running in 5 minutes. Follow our step-by-step guide to integrate the SDK
-                into your game.
-              </p>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "installation",
-        title: "Installation",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              SDK Installation
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Install the SnappGame SDK using your preferred package manager:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`npm install @snappgame/sdk
-# or
-yarn add @snappgame/sdk
-# or
-pnpm add @snappgame/sdk`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("npm install @snappgame/sdk");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "authentication",
-        title: "Authentication",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              API Authentication
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              All API requests require authentication using your API key. Include it in the
-              Authorization header:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`Authorization: Bearer YOUR_API_KEY`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("Authorization: Bearer YOUR_API_KEY");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-            <div className="rounded-lg border border-warning-200 bg-warning-50 p-3 dark:border-warning-500/30 dark:bg-warning-500/10">
-              <p className="text-xs text-warning-800 dark:text-warning-400">
-                ⚠️ Keep your API keys secure. Never commit them to version control or expose them
-                in client-side code.
-              </p>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
-  {
-    id: "api-reference",
-    title: "API Reference",
-    icon: "📚",
-    subsections: [
-      {
-        id: "games",
-        title: "Games API",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Get All Games
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Retrieve a list of all games in your account.
-            </p>
-            <div className="space-y-2">
-              <div className="relative">
-                <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                  <code className="text-gray-800 dark:text-gray-300">
-                    {`GET /api/v1/games
-
-Response:
-{
-  "data": [
-    {
-      "id": "game_123",
-      "name": "My Awesome Game",
-      "status": "active",
-      "created_at": "2024-01-15T10:30:00Z"
-    }
-  ],
-  "pagination": {
-    "page": 1,
-    "per_page": 20,
-    "total": 1
-  }
-}`}
-                  </code>
-                </pre>
-                <button
-                  onClick={() => {
-                    navigator.clipboard.writeText("GET /api/v1/games");
-                  }}
-                  className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                  title="Copy code"
-                >
-                  <CopyIcon className="h-4 w-4" />
-                </button>
-              </div>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "campaigns",
-        title: "Campaigns API",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Create Campaign
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Create a new advertising campaign for your game.
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`POST /api/v1/campaigns
-
-Request Body:
-{
-  "name": "Summer Sale Campaign",
-  "game_id": "game_123",
-  "budget": 5000,
-  "start_date": "2024-06-01",
-  "end_date": "2024-06-30"
-}
-
-Response:
-{
-  "id": "campaign_456",
-  "name": "Summer Sale Campaign",
-  "status": "active",
-  "created_at": "2024-05-15T10:30:00Z"
-}`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("POST /api/v1/campaigns");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "analytics",
-        title: "Analytics API",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Get Analytics Data
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Retrieve analytics data for your games and campaigns.
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`GET /api/v1/analytics?game_id=game_123&start_date=2024-01-01&end_date=2024-01-31
-
-Response:
-{
-  "data": {
-    "impressions": 125000,
-    "clicks": 3500,
-    "conversions": 450,
-    "revenue": 12500.50,
-    "ctr": 2.8,
-    "conversion_rate": 12.86
-  }
-}`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("GET /api/v1/analytics");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
-  {
-    id: "sdk-integration",
-    title: "SDK Integration",
-    icon: "⚙️",
-    subsections: [
-      {
-        id: "initialization",
-        title: "SDK Initialization",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Initialize the SDK
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Initialize the SnappGame SDK in your application:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`import { SnappGameSDK } from '@snappgame/sdk';
-
-const sdk = new SnappGameSDK({
-  apiKey: 'YOUR_API_KEY',
-  environment: 'production', // or 'sandbox'
-  gameId: 'game_123'
-});
-
-await sdk.initialize();`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(
-                    "import { SnappGameSDK } from '@snappgame/sdk';"
-                  );
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "events",
-        title: "Tracking Events",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Track User Events
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Track important user events to optimize your campaigns:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`// Track a purchase event
-sdk.trackEvent('purchase', {
-  amount: 9.99,
-  currency: 'USD',
-  item_id: 'premium_pack',
-  user_id: 'user_123'
-});
-
-// Track level completion
-sdk.trackEvent('level_complete', {
-  level: 5,
-  score: 15000,
-  time_spent: 120
-});`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("sdk.trackEvent('purchase', {...});");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "ad-placement",
-        title: "Ad Placement",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Display Ads
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Integrate ads into your game at strategic points:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`// Show interstitial ad after level completion
-sdk.showAd('interstitial', {
-  placement: 'level_complete',
-  onClose: () => {
-    // Continue to next level
-  },
-  onError: (error) => {
-    console.error('Ad error:', error);
-  }
-});
-
-// Show rewarded ad
-sdk.showAd('rewarded', {
-  placement: 'extra_lives',
-  onReward: (reward) => {
-    // Give player extra lives
-    giveExtraLives(reward.amount);
-  }
-});`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("sdk.showAd('interstitial', {...});");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
-  {
-    id: "examples",
-    title: "Code Examples",
-    icon: "💻",
-    subsections: [
-      {
-        id: "react-example",
-        title: "React Integration",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              React Component Example
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Example of integrating SnappGame SDK in a React application:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`import { useEffect } from 'react';
-import { SnappGameSDK } from '@snappgame/sdk';
-
-function GameComponent() {
-  useEffect(() => {
-    const sdk = new SnappGameSDK({
-      apiKey: process.env.REACT_APP_SNAPPGAME_API_KEY,
-      gameId: 'game_123'
-    });
-    
-    sdk.initialize();
-    
-    return () => sdk.destroy();
-  }, []);
-  
-  const handleLevelComplete = () => {
-    sdk.trackEvent('level_complete', { level: currentLevel });
-    sdk.showAd('interstitial');
-  };
-  
-  return <div>Your game content</div>;
-}`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("import { SnappGameSDK } from '@snappgame/sdk';");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "unity-example",
-        title: "Unity Integration",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Unity C# Example
-            </h4>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Example of integrating SnappGame SDK in a Unity game:
-            </p>
-            <div className="relative">
-              <pre className="overflow-x-auto rounded-lg border border-gray-200 bg-gray-50 p-4 text-xs dark:border-gray-800 dark:bg-gray-900">
-                <code className="text-gray-800 dark:text-gray-300">
-                  {`using SnappGameSDK;
-
-public class GameManager : MonoBehaviour
-{
-    private SnappGameSDK sdk;
-    
-    void Start()
-    {
-        sdk = new SnappGameSDK("YOUR_API_KEY", "game_123");
-        sdk.Initialize();
-    }
-    
-    public void OnLevelComplete(int level)
-    {
-        sdk.TrackEvent("level_complete", new Dictionary<string, object>
-        {
-            { "level", level },
-            { "score", currentScore }
-        });
-        
-        sdk.ShowAd("interstitial");
-    }
-}`}
-                </code>
-              </pre>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText("using SnappGameSDK;");
-                }}
-                className="absolute right-2 top-2 rounded p-1.5 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-800"
-                title="Copy code"
-              >
-                <CopyIcon className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
-  {
-    id: "best-practices",
-    title: "Best Practices",
-    icon: "✨",
-    subsections: [
-      {
-        id: "performance",
-        title: "Performance Optimization",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Optimize SDK Performance
-            </h4>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Initialize the SDK early in your app lifecycle, but not during critical game
-                  loading
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>Use lazy loading for ad placements to avoid blocking game startup</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Batch event tracking when possible to reduce network requests
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Cache API responses locally to minimize redundant API calls
-                </span>
-              </li>
-            </ul>
-          </div>
-        ),
-      },
-      {
-        id: "user-experience",
-        title: "User Experience",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              UX Guidelines
-            </h4>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Show ads at natural break points (level completion, menu screens) rather than
-                  interrupting gameplay
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Always provide a skip option for non-rewarded ads after a reasonable duration
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Make rewarded ads clearly valuable to the user (extra lives, coins, etc.)
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Test ad placement on different devices and screen sizes
-                </span>
-              </li>
-            </ul>
-          </div>
-        ),
-      },
-      {
-        id: "security",
-        title: "Security",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Security Best Practices
-            </h4>
-            <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Never expose your API keys in client-side code. Use environment variables or
-                  secure configuration
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Validate all user input before sending to the API
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Use HTTPS for all API communications
-                </span>
-              </li>
-              <li className="flex items-start gap-2">
-                <span className="mt-1">•</span>
-                <span>
-                  Implement rate limiting on your side to prevent abuse
-                </span>
-              </li>
-            </ul>
-            <div className="rounded-lg border border-error-200 bg-error-50 p-3 dark:border-error-500/30 dark:bg-error-500/10">
-              <p className="text-xs text-error-800 dark:text-error-400">
-                ⚠️ Always keep your API keys secure. Rotate them regularly and revoke any keys that
-                may have been compromised.
-              </p>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
-  {
-    id: "troubleshooting",
-    title: "Troubleshooting",
-    icon: "🔧",
-    subsections: [
-      {
-        id: "common-issues",
-        title: "Common Issues",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              Frequently Asked Questions
-            </h4>
-            <div className="space-y-4">
-              <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h5 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white/90">
-                  Q: Ads are not showing
-                </h5>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  A: Check that your API key is valid and your account has active campaigns. Ensure
-                  the SDK is properly initialized before calling showAd().
-                </p>
-              </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h5 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white/90">
-                  Q: Events are not being tracked
-                </h5>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  A: Verify your network connection and check the browser console for errors. Make
-                  sure you're using the correct event names and parameters.
-                </p>
-              </div>
-              <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-                <h5 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white/90">
-                  Q: API returns 401 Unauthorized
-                </h5>
-                <p className="text-xs text-gray-600 dark:text-gray-400">
-                  A: Your API key may be invalid or expired. Check your API key in the dashboard
-                  and ensure it's correctly included in the Authorization header.
-                </p>
-              </div>
-            </div>
-          </div>
-        ),
-      },
-      {
-        id: "error-codes",
-        title: "Error Codes",
-        content: (
-          <div className="space-y-4">
-            <h4 className="text-base font-semibold text-gray-900 dark:text-white/90">
-              API Error Codes
-            </h4>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr className="border-b border-gray-200 dark:border-gray-800">
-                    <th className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-white/90">
-                      Code
-                    </th>
-                    <th className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-white/90">
-                      Message
-                    </th>
-                    <th className="px-4 py-2 text-left font-semibold text-gray-900 dark:text-white/90">
-                      Description
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="text-gray-600 dark:text-gray-400">
-                  <tr className="border-b border-gray-200 dark:border-gray-800">
-                    <td className="px-4 py-2 font-mono text-xs">400</td>
-                    <td className="px-4 py-2">Bad Request</td>
-                    <td className="px-4 py-2">Invalid request parameters</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 dark:border-gray-800">
-                    <td className="px-4 py-2 font-mono text-xs">401</td>
-                    <td className="px-4 py-2">Unauthorized</td>
-                    <td className="px-4 py-2">Invalid or missing API key</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 dark:border-gray-800">
-                    <td className="px-4 py-2 font-mono text-xs">403</td>
-                    <td className="px-4 py-2">Forbidden</td>
-                    <td className="px-4 py-2">Insufficient permissions</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 dark:border-gray-800">
-                    <td className="px-4 py-2 font-mono text-xs">404</td>
-                    <td className="px-4 py-2">Not Found</td>
-                    <td className="px-4 py-2">Resource not found</td>
-                  </tr>
-                  <tr className="border-b border-gray-200 dark:border-gray-800">
-                    <td className="px-4 py-2 font-mono text-xs">429</td>
-                    <td className="px-4 py-2">Too Many Requests</td>
-                    <td className="px-4 py-2">Rate limit exceeded</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-2 font-mono text-xs">500</td>
-                    <td className="px-4 py-2">Internal Server Error</td>
-                    <td className="px-4 py-2">Server error, contact support</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ),
-      },
-    ],
-  },
+const sections = [
+  { id: "introduction", title: "👋 Introduction", icon: "👋" },
+  { id: "getting-started", title: "🚀 Getting Started", icon: "🚀" },
+  { id: "our-products", title: "📦 Our Products", icon: "📦" },
+  { id: "integration-guide", title: "🛠️ Integration Guide", icon: "🛠️" },
+  { id: "rev-share", title: "💰 Revenue Sharing", icon: "💰" },
+  { id: "faq", title: "❓ FAQ", icon: "❓" },
 ];
 
 export default function DeveloperDocPage() {
-  const [selectedSection, setSelectedSection] = useState<string>("getting-started");
-  const [selectedSubsection, setSelectedSubsection] = useState<string>("introduction");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [activeSection, setActiveSection] = useState("introduction");
 
-  const currentSection = documentation.find((s) => s.id === selectedSection);
-  const currentSubsection = currentSection?.subsections.find(
-    (s) => s.id === selectedSubsection
-  );
+  useEffect(() => {
+    const handleScroll = () => {
+      const sectionElements = sections.map(s => document.getElementById(s.id));
+      const scrollPosition = window.scrollY + 100;
 
-  // Filter documentation based on search
-  const filteredDocs = searchQuery
-    ? documentation
-        .map((section) => ({
-          ...section,
-          subsections: section.subsections.filter(
-            (sub) =>
-              sub.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              section.title.toLowerCase().includes(searchQuery.toLowerCase())
-          ),
-        }))
-        .filter((section) => section.subsections.length > 0)
-    : documentation;
+      for (let i = sectionElements.length - 1; i >= 0; i--) {
+        const el = sectionElements[i];
+        if (el && el.offsetTop <= scrollPosition) {
+          setActiveSection(sections[i].id);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      window.scrollTo({
+        top: element.offsetTop - 80,
+        behavior: "smooth"
+      });
+    }
+  };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold text-gray-900 dark:text-white/90">
-            Developer Documentation
-          </h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Complete guide to integrating SnappGame SDK and APIs into your games.
-          </p>
-        </div>
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-12">
-        {/* Sidebar Navigation */}
-        <aside className="lg:col-span-3">
-          <div className="sticky top-6 space-y-4">
-            {/* Search */}
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search documentation..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 pl-9 text-sm text-gray-700 shadow-sm placeholder:text-gray-400 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-300 dark:placeholder:text-gray-500 dark:focus:border-brand-500"
-              />
-              <svg
-                className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400 dark:text-gray-500"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-
-            {/* Navigation */}
-            <nav className="space-y-1 rounded-xl border border-gray-200 bg-white p-2 dark:border-gray-800 dark:bg-white/[0.03]">
-              {filteredDocs.map((section) => (
-                <div key={section.id} className="space-y-1">
-                  <button
-                    onClick={() => {
-                      setSelectedSection(section.id);
-                      setSelectedSubsection(section.subsections[0].id);
-                    }}
-                    className={`w-full flex items-center gap-2 rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors ${
-                      selectedSection === section.id
-                        ? "bg-brand-50 text-brand-700 dark:bg-brand-500/20 dark:text-brand-400"
-                        : "text-gray-700 hover:bg-gray-50 dark:text-gray-300 dark:hover:bg-white/5"
-                    }`}
-                  >
-                    <span>{section.icon}</span>
-                    <span className="flex-1">{section.title}</span>
-                    <ArrowRightIcon
-                      className={`h-4 w-4 transition-transform ${
-                        selectedSection === section.id ? "rotate-90" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {selectedSection === section.id && (
-                    <div className="ml-4 space-y-0.5 border-l-2 border-gray-200 pl-3 dark:border-gray-800">
-                      {section.subsections.map((subsection) => (
-                        <button
-                          key={subsection.id}
-                          onClick={() => setSelectedSubsection(subsection.id)}
-                          className={`block w-full rounded px-2 py-1.5 text-left text-xs transition-colors ${
-                            selectedSubsection === subsection.id
-                              ? "bg-brand-50 font-medium text-brand-700 dark:bg-brand-500/20 dark:text-brand-400"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-                          }`}
-                        >
-                          {subsection.title}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </nav>
-          </div>
-        </aside>
-
-        {/* Main Content */}
-        <main className="lg:col-span-9">
-          <div className="rounded-xl border border-gray-200 bg-white px-6 py-6 shadow-sm dark:border-gray-800 dark:bg-white/[0.03]">
-            {currentSubsection ? (
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-xl font-semibold text-gray-900 dark:text-white/90">
-                    {currentSubsection.title}
-                  </h2>
-                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                    {currentSection?.title}
-                  </p>
-                </div>
-
-                <div className="prose prose-sm max-w-none dark:prose-invert">
-                  {currentSubsection.content}
-                </div>
-              </div>
-            ) : (
-              <div className="py-12 text-center">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Select a section from the sidebar to view documentation.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Quick Links */}
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            <div className="rounded-xl border border-brand-200 bg-brand-50 p-4 dark:border-brand-500/30 dark:bg-brand-500/10">
-              <h3 className="mb-2 text-sm font-semibold text-brand-900 dark:text-brand-400">
-                Need Help?
-              </h3>
-              <p className="mb-3 text-xs text-brand-700 dark:text-brand-400">
-                Can't find what you're looking for? Our support team is here to help.
+    <div className="flex gap-10 pb-20 font-sans max-w-7xl mx-auto">
+      {/* Sticky Sidebar Navigation */}
+      <aside className="w-64 hidden lg:block">
+        <div className="sticky top-24 space-y-1">
+          <h3 className="px-4 text-[11px] font-bold text-gray-400 uppercase tracking-widest mb-4">Documentation</h3>
+          {sections.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => scrollToSection(section.id)}
+              className={`w-full text-left px-4 py-2 text-sm font-medium rounded-lg transition-all ${activeSection === section.id
+                  ? "bg-orange-50 text-orange-600 dark:bg-orange-500/10 dark:text-orange-400"
+                  : "text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white"
+                }`}
+            >
+              {section.title}
+            </button>
+          ))}
+          <div className="mt-10 px-4">
+            <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
+              <h4 className="text-[11px] font-bold text-blue-700 dark:text-blue-400 uppercase mb-2">Need help?</h4>
+              <p className="text-[10px] text-blue-600 dark:text-blue-300 leading-relaxed mb-3">
+                Join our developer community or contact our support team.
               </p>
-              <a
-                href="/support"
-                className="inline-block rounded-lg border border-brand-300 bg-white px-3 py-1.5 text-xs font-medium text-brand-700 hover:bg-brand-100 dark:border-brand-500 dark:bg-gray-900 dark:text-brand-400 dark:hover:bg-gray-800"
-              >
-                Contact Support
-              </a>
-            </div>
-
-            <div className="rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-800 dark:bg-white/[0.03]">
-              <h3 className="mb-2 text-sm font-semibold text-gray-900 dark:text-white/90">
-                API Status
-              </h3>
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success-500 opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-success-500"></span>
-                </span>
-                <p className="text-xs text-gray-600 dark:text-gray-400">All systems operational</p>
-              </div>
-              <a
-                href="#"
-                className="mt-2 inline-block text-xs text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300"
-              >
-                View API Status Page →
-              </a>
+              <button className="text-[10px] font-bold text-blue-700 dark:text-blue-400 hover:underline">
+                CONTACT SUPPORT →
+              </button>
             </div>
           </div>
-        </main>
-      </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 space-y-24 max-w-3xl">
+        {/* Introduction Section */}
+        <section id="introduction" className="space-y-6">
+          <h1 className="text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">👋 Introduction</h1>
+          <p className="text-lg text-gray-500 dark:text-gray-400 leading-relaxed">
+            Welcome to the <span className="font-bold text-orange-500">SnappGames Business</span> Publisher integration documents.
+            Explore our guides and examples to integrate high-engagement content directly within your application
+            or website.
+          </p>
+          <div className="bg-gray-100 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">About SnappGames</h3>
+            <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+              At SnappGames, we are building one of the world's largest distribution networks for digital casual content.
+              Since 2015, we've focused on delivering premium HTML5 experiences (instant games) that publishers
+              can embed seamlessly. Our partners benefit from significantly higher engagement, retention,
+              and a robust ad-revenue sharing program.
+            </p>
+          </div>
+        </section>
+
+        {/* Getting Started Section */}
+        <section id="getting-started" className="space-y-6">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">🚀 Getting Started</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            Follow these simple steps to begin monetizing your platform with SnappGames.
+          </p>
+          <div className="space-y-4">
+            {[
+              { step: 1, title: "Sign Up", desc: "Create your publisher account on the SnappGames Business portal." },
+              { step: 2, title: "Submit Property", desc: "Register your website or mobile app details for review." },
+              { step: 3, title: "Obtain Property ID", desc: "Once approved, you'll receive a unique ID needed for integration." },
+              { step: 4, title: "Go Live", desc: "Embed the SDK or iframe and start earning through our content!" }
+            ].map((s) => (
+              <div key={s.step} className="flex gap-4 p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-white/[0.02]">
+                <div className="h-8 w-8 rounded-full bg-orange-500 text-white flex items-center justify-center font-bold text-sm shrink-0">
+                  {s.step}
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-gray-900 dark:text-white">{s.title}</h4>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Product Verticals Section */}
+        <section id="our-products" className="space-y-8">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">📦 Our Products</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            SnappGames offers multiple content verticals designed for different user interests.
+            Each can be integrated independently or as a unified suite.
+          </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {[
+              { name: "Games", desc: "100+ premium HTML5 instant games across all genres.", color: "text-blue-500" },
+              { name: "Quizzes", desc: "Hundreds of popular categories like Tech, Business, and Logos.", color: "text-purple-500" },
+              { name: "News", desc: "Access the latest global news and trending stories.", color: "text-green-500" },
+              { name: "Astrology", desc: "Western, Vedic, Tarot, and daily Horoscopes.", color: "text-orange-500" }
+            ].map((p) => (
+              <div key={p.name} className="p-6 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/30 dark:bg-white/[0.01] hover:shadow-md transition-shadow">
+                <h4 className={`text-sm font-bold ${p.color} uppercase tracking-tight mb-2 underline decoration-2 underline-offset-4`}>{p.name}</h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Integration Guide Section */}
+        <section id="integration-guide" className="space-y-6">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">🛠️ Integration Guide</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            The simplest way to integrate SnappGames is using our standard iframe method.
+            Just replace `YOUR_PROPERTY_ID` with your actual ID.
+          </p>
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-orange-400 to-blue-500 rounded-xl blur opacity-25 group-hover:opacity-40 transition duration-1000"></div>
+            <div className="relative p-6 rounded-xl bg-gray-900 dark:bg-black border border-gray-800 overflow-hidden">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">HTML snippet</span>
+                <button className="text-[10px] text-blue-400 hover:text-blue-300 font-bold uppercase">Copy Code</button>
+              </div>
+              <pre className="text-xs text-blue-100 font-mono leading-relaxed overflow-x-auto whitespace-pre-wrap">
+                {`<iframe
+  src="https://www.snappgames.com/embed/?id=YOUR_PROPERTY_ID"
+  width="100%"
+  height="600"
+  frameborder="0"
+  allowfullscreen
+></iframe>`}
+              </pre>
+            </div>
+          </div>
+        </section>
+
+        {/* Revenue Sharing Section */}
+        <section id="rev-share" className="space-y-6">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">💰 Revenue Sharing</h2>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            SnappGames operates on a transparent ad-revenue sharing model.
+            All ads served within the game environment contribute to your monthly earnings.
+            You can track your performance in real-time through the <span className="font-bold text-orange-500">Payments</span> section of this dashboard.
+          </p>
+          <div className="p-4 rounded-xl bg-orange-50 dark:bg-orange-900/10 border border-orange-100 dark:border-orange-800">
+            <p className="text-xs text-orange-700 dark:text-orange-300 font-medium">
+              Note: Revenue is typically calculated on a Net-30 basis and paid out in your preferred currency (USD/INR).
+            </p>
+          </div>
+        </section>
+
+        {/* FAQ Section */}
+        <section id="faq" className="space-y-6">
+          <h2 className="text-3xl font-bold text-gray-900 dark:text-white tracking-tight">❓ FAQ</h2>
+          <div className="space-y-4">
+            {[
+              { q: "Can I customize the game list?", a: "Yes, you can filter genres and specific titles from your dashboard control panel." },
+              { q: "Is it mobile friendly?", a: "SnappGames are built with HTML5 and are fully responsive across all mobile browsers." },
+              { q: "How do I get paid?", a: "You can set up your bank details in the Account Info section. We support wire transfers and popular digital wallets." }
+            ].map((f, i) => (
+              <div key={i} className="space-y-2 border-b border-gray-100 dark:border-gray-800 pb-4 last:border-0">
+                <h4 className="text-sm font-bold text-gray-900 dark:text-white italic">Q: {f.q}</h4>
+                <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Footer */}
+        <footer className="pt-20 border-t border-gray-100 dark:border-gray-800 text-center">
+          <p className="text-xs text-gray-400 mb-6 italic">Last updated: {new Date().toLocaleDateString("en-US", { month: 'long', year: 'numeric', day: 'numeric' })}</p>
+          <div className="flex items-center justify-center gap-6">
+            {["GitHub", "LinkedIn", "X (Twitter)", "Support"].map((link) => (
+              <button key={link} className="text-[10px] font-bold text-gray-500 hover:text-gray-900 dark:hover:text-white uppercase tracking-widest">{link}</button>
+            ))}
+          </div>
+        </footer>
+      </main>
     </div>
   );
 }
-

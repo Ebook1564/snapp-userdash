@@ -2,14 +2,22 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 export default function HomePage() {
+  const { clientEmail, isLoading } = useUser();
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to login page
-    router.push("/signin");
-  }, [router]);
+    if (isLoading) return;
+
+    if (clientEmail) {
+      router.push("/overview");
+    } else {
+      // Redirect to login page
+      router.push("/signin");
+    }
+  }, [router, clientEmail, isLoading]);
 
   // Show loading state while redirecting
   return (

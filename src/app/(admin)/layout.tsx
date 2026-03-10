@@ -5,7 +5,9 @@ import { useSidebar } from "@/context/SidebarContext";
 import AppHeader from "@/layout/AppHeader";
 import AppSidebar from "@/layout/AppSidebar";
 import Backdrop from "@/layout/Backdrop";
-import React from "react";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useUser } from "@/context/UserContext";
 
 export default function AdminLayout({
   children,
@@ -13,13 +15,31 @@ export default function AdminLayout({
   children: React.ReactNode;
 }) {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const { clientEmail, isLoading } = useUser();
+  const router = useRouter();
+
+  // Authentication guard
+  useEffect(() => {
+    if (!isLoading && !clientEmail) {
+      router.push("/signin");
+    }
+  }, [clientEmail, isLoading, router]);
+
+  // Show nothing or a loader while checking auth
+  if (isLoading || !clientEmail) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-500"></div>
+      </div>
+    );
+  }
 
   // Dynamic class for main content margin based on sidebar state
   const mainContentMargin = isMobileOpen
     ? "ml-0"
     : isExpanded || isHovered
-    ? "lg:ml-[290px]"
-    : "lg:ml-[90px]";
+      ? "lg:ml-[290px]"
+      : "lg:ml-[90px]";
 
   return (
     <div className="min-h-screen xl:flex">
@@ -35,7 +55,7 @@ export default function AdminLayout({
         {/* Page Content */}
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}
 
-        <Footer/>
+          <Footer />
         </div>
       </div>
     </div>

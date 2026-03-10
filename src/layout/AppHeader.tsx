@@ -146,19 +146,7 @@ const AppHeader: React.FC = () => {
 
         {/* RIGHT SECTION: Actions (Notifications, Live Status, User) */}
         <div className="flex items-center justify-end gap-1 sm:gap-1.5 md:gap-2 lg:gap-3 min-w-0 flex-shrink-0">
-          {/* Live Status Button (Desktop Only) */}
-          <button
-            type="button"
-            className="hidden xl:inline-flex items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-2 sm:px-2.5 py-1 sm:py-1.5 text-[10px] sm:text-xs font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
-            onClick={() => setApplicationMenuOpen((prev) => !prev)}
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-success-500 opacity-75"></span>
-              <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-success-500"></span>
-            </span>
-            <span className="hidden 2xl:inline">Live</span>
-          </button>
-
+          
           {/* Mobile Search Button (Shows on mobile instead of search bar) */}
           <button
             type="button"
@@ -186,7 +174,7 @@ const AppHeader: React.FC = () => {
 
           {/* Notifications Dropdown */}
           <div className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center">
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
           </div>
 
           {/* User Dropdown */}

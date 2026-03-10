@@ -11,7 +11,7 @@ import { useUser } from "@/context/UserContext";
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const { isExpanded, isMobileOpen, isHovered } = useSidebar();
-  const { clientName, clientEmail } = useUser(); // Include email from context
+  const { clientName, clientEmail, setClientEmail } = useUser(); // Include email and setter
 
   const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
@@ -46,9 +46,8 @@ export default function UserDropdown() {
           {clientName}
         </span>
         <svg
-          className={`h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-200 flex-shrink-0 ${
-            isOpen ? "rotate-180" : ""
-          }`}
+          className={`h-4 w-4 text-gray-500 dark:text-gray-400 transition-transform duration-200 flex-shrink-0 ${isOpen ? "rotate-180" : ""
+            }`}
           viewBox="0 0 18 20"
           fill="none"
         >
@@ -129,7 +128,10 @@ export default function UserDropdown() {
         <Link
           href="/signin"
           className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-semibold text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20 transition-colors"
-          onClick={closeDropdown}
+          onClick={() => {
+            setClientEmail(null);
+            closeDropdown();
+          }}
         >
           <svg className="h-5 w-5 flex-shrink-0" viewBox="0 0 24 24" fill="none">
             <path
