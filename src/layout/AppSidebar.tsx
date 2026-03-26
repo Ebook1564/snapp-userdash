@@ -7,14 +7,11 @@ import { useSidebar } from "../context/SidebarContext";
 import { useUser } from "../context/UserContext";
 import {
   ChevronDownIcon,
-  GridIcon,
   HorizontaLDots,
-  DollarLineIcon,
   FolderIcon,
   DocsIcon,
   ChatIcon,
   PieChartIcon,
-  PlugInIcon,
   UserCircleIcon,
 } from "../icons/index";
 

@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import Cookies from "js-cookie";
 
 type UserContextType = {
@@ -43,7 +43,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(false);
   }, []);
 
-  const updateClientCountry = (country: string | null) => {
+  const updateClientCountry = useCallback((country: string | null) => {
     console.log("[UserContext] Updating clientCountry to:", country);
     setClientCountry(country);
     if (country === null) {
@@ -51,7 +51,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       Cookies.set("clientCountry", country, { expires: 7 });
     }
-  };
+  }, [clientCountry]);
 
   // Fetch profile to get country if not already set or whenever email changes
   useEffect(() => {
@@ -80,13 +80,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     fetchProfile();
   }, [clientEmail, clientCountry, updateClientCountry]);
 
-  const updateClientName = (name: string) => {
+  const updateClientName = useCallback((name: string) => {
     setClientName(name);
     // Set cookie that expires in 7 days
     Cookies.set("clientName", name, { expires: 7 });
-  };
+  }, []);
 
-  const updateClientEmail = (email: string | null) => {
+  const updateClientEmail = useCallback((email: string | null) => {
     setClientEmail(email);
     if (email === null) {
       Cookies.remove("clientEmail");
@@ -95,7 +95,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       Cookies.set("clientEmail", email, { expires: 7 });
     }
-  };
+  }, []);
 
 
   return (

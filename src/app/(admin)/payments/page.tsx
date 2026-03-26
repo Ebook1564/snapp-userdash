@@ -104,7 +104,7 @@ export default function PaymentsPage() {
                                                 <div>
                                                     <h3 className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Revenue from properties</h3>
                                                     <div className="space-y-4">
-                                                        {(item as Record<string, unknown>).properties && (item as Record<string, any>).properties.map((prop: { name: string; revenue: string }, idx: number) => (
+                                                        {(((item as Record<string, unknown>).properties as { name: string; revenue: string }[] | undefined) || []).map((prop, idx) => (
                                                             <div key={idx} className="flex items-center justify-between pb-4 border-b border-gray-50 dark:border-gray-800/50 last:border-0 last:pb-0">
                                                                 <div className="flex items-center gap-3">
                                                                     <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{prop.name}</span>
@@ -117,7 +117,7 @@ export default function PaymentsPage() {
 
                                                 {/* Deductions */}
                                                 <div className="space-y-3">
-                                                    {(item as Record<string, unknown>).deductions && (item as Record<string, any>).deductions.map((deduct: { label: string; amount: string }, idx: number) => (
+                                                    {(((item as Record<string, unknown>).deductions as { label: string; amount: string }[] | undefined) || []).map((deduct, idx) => (
                                                         <div key={idx} className="flex items-center justify-between">
                                                             <div className="flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400">
                                                                 {deduct.label}
@@ -138,8 +138,8 @@ export default function PaymentsPage() {
                                                     </div>
                                                     {/* Conversion row hidden or simplified */}
                                                     <div className="hidden items-center justify-between pl-6 text-xs font-medium text-gray-500 dark:text-gray-400">
-                                                        <span>{String((item as any).conversion?.label || "")}</span>
-                                                        <span>{String((item as any).conversion?.total || "")}</span>
+                                                        <span>{String(((item as Record<string, unknown>).conversion as Record<string, unknown>)?.label || "")}</span>
+                                                        <span>{String(((item as Record<string, unknown>).conversion as Record<string, unknown>)?.total || "")}</span>
                                                     </div>
                                                 </div>
 

@@ -1,16 +1,12 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { useModal } from "../../hooks/useModal";
-import { Modal } from "../ui/modal";
-import Button from "../ui/button/Button";
-import Input from "../form/input/InputField";
-import Label from "../form/Label";
-import Image from "next/image";
+
 import { useUser } from "@/context/UserContext";
 
 
 export default function UserMetaCard() {
-  const { isOpen, openModal, closeModal } = useModal();
+  const { openModal } = useModal();
   const { clientName, clientEmail } = useUser();
 
   const [profile, setProfile] = useState<{
@@ -34,7 +30,7 @@ export default function UserMetaCard() {
         const data = await res.json();
         const merged = { ...(data.user || {}), ...(data.rawRow || {}) };
         setProfile(merged);
-      } catch (e) {
+      } catch {
         // noop
       }
     };
@@ -43,11 +39,7 @@ export default function UserMetaCard() {
   const displayName =
     (profile.username || profile.user_name || profile.first_name || profile.useremail || clientName || "").toString();
   const initial = displayName ? displayName.trim().charAt(0).toUpperCase() : "P";
-  const handleSave = () => {
-    // Handle save logic here
-    console.log("Saving changes...");
-    closeModal();
-  };
+
   return (
     <>
       <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">

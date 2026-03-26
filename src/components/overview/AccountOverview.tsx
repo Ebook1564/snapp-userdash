@@ -114,7 +114,14 @@ export default function AccountOverview() {
       })));
 
       // We use the memoized dynamicFinancialMetrics instead of static OVERVIEW_DATA
-      setFinancialMetrics(dynamicFinancialMetrics as unknown as any);
+      setFinancialMetrics(dynamicFinancialMetrics as unknown as {
+        today: FinancialMetric;
+        yesterday: FinancialMetric;
+        last7Days: FinancialMetric;
+        thisMonth: FinancialMetric;
+        last28Days: FinancialMetric;
+        dau?: { value: string; label: string; change: string; isPositive: boolean };
+      });
 
       setIsDataLoading(false);
     };
@@ -374,7 +381,7 @@ export default function AccountOverview() {
                         Active Users
                       </p>
                       <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-0.5 break-words">
-                        {(financialMetrics as unknown as any).dau?.value || "0"}
+                        {((financialMetrics as Record<string, unknown>).dau as { value: string })?.value || "0"}
                       </p>
                       <p className="text-[10px] sm:text-xs text-gray-500 break-words leading-tight">
                         Monthly avg
