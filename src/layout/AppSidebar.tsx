@@ -115,7 +115,7 @@ const AppSidebar: React.FC = () => {
       list.forEach((nav, index) => {
         nav.subItems?.forEach((sub) => {
           if (isActive(sub.path)) {
-            setOpenSubmenu({ type: menuType as any, index });
+            setOpenSubmenu({ type: menuType as "main" | "others", index });
             matched = true;
           }
         });

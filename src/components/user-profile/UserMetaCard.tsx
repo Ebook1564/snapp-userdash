@@ -18,7 +18,7 @@ export default function UserMetaCard() {
     country_name?: string | null;
     country_code?: string | null;
     useremail?: string | null;
-    [key: string]: any;
+    [key: string]: unknown;
   }>({});
 
   useEffect(() => {
@@ -64,7 +64,7 @@ export default function UserMetaCard() {
                
                 <div className="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {profile.country_name || profile.country || ""}
+                  {String(profile.country_name || profile.country || "")}
                 </p>
               </div>
             </div>

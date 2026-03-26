@@ -25,7 +25,7 @@ export default function UserInfoCard() {
     countrycode?: string | null;
     country_name?: string | null;
     // allow any additional fields from raw DB row
-    [key: string]: any;
+    [key: string]: unknown;
   }>({});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -100,7 +100,7 @@ export default function UserInfoCard() {
                   <p className="text-sm font-medium text-gray-800 dark:text-white/90">
                     {(() => {
                       const code = (profile.country_code || profile.countrycode || "") as string;
-                      const phoneRaw = (profile.phone || profile.mobile || (profile as any).phoneno || "") as string;
+                      const phoneRaw = (profile.phone || profile.mobile || (profile as Record<string, unknown>).phoneno || "") as string;
                       let phone = phoneRaw?.toString() || "";
                       // trim and remove any non-digit except +
                       phone = phone.trim();

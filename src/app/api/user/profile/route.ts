@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Try usertable using useremail column first (your schema uses `useremail`).
-    let user: Record<string, any> | null = null;
+    let user: Record<string, unknown> | null = null;
     // allow debug flag from client to return raw row (only in non-production)
     const { debug } = await request.json().catch(() => ({ debug: false }));
 
@@ -128,7 +128,7 @@ export async function POST(request: NextRequest) {
     const redacted = { ...user };
     if (redacted.password) redacted.password = "<redacted>";
 
-    const responsePayload: Record<string, any> = { success: true, user: mappedUser };
+    const responsePayload: Record<string, unknown> = { success: true, user: mappedUser };
     if (debug && process.env.NODE_ENV !== "production") {
       responsePayload.rawRow = redacted;
     }

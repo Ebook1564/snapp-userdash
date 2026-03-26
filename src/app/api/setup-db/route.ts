@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 
 export async function GET() {
@@ -41,7 +41,7 @@ export async function GET() {
         console.error("Database setup error:", error);
         return NextResponse.json({
             success: false,
-            error: (error as any).message
+            error: (error as Error).message
         }, { status: 500 });
     }
 }

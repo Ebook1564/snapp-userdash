@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { useUser } from "@/context/UserContext";
 import Link from "next/link";
-import { OVERVIEW_DATA, PROPERTIES, REPORT_DATA, REVENUE_BY_GAME } from "@/lib/mock-data";
+import { OVERVIEW_DATA, PROPERTIES, REPORT_DATA } from "@/lib/mock-data";
 import { fetchUserMetrics, fetchUserMetricsFromAPI, UserMetricRow } from "@/lib/user-data-table";
 
 interface FinancialMetric {
@@ -47,7 +47,7 @@ export default function AccountOverview() {
   const dynamicFinancialMetrics = useMemo(() => {
     // FETCH from real DB (async) or simulated fallback
     const userMetrics = dbMetrics || fetchUserMetrics(clientEmail);
-    const { chartData } = REPORT_DATA;
+    const {  } = REPORT_DATA;
 
     // Values from the 'database'
     const todayVal = userMetrics.today_revenue;
@@ -114,7 +114,7 @@ export default function AccountOverview() {
       })));
 
       // We use the memoized dynamicFinancialMetrics instead of static OVERVIEW_DATA
-      setFinancialMetrics(dynamicFinancialMetrics as any);
+      setFinancialMetrics(dynamicFinancialMetrics as unknown as any);
 
       setIsDataLoading(false);
     };
@@ -374,7 +374,7 @@ export default function AccountOverview() {
                         Active Users
                       </p>
                       <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-0.5 break-words">
-                        {(financialMetrics as any).dau?.value || "0"}
+                        {(financialMetrics as unknown as any).dau?.value || "0"}
                       </p>
                       <p className="text-[10px] sm:text-xs text-gray-500 break-words leading-tight">
                         Monthly avg

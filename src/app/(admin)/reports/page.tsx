@@ -22,13 +22,13 @@ export default function ReportsPage() {
     const getSimulatedChartData = () => {
         let baseData = [...chartData];
         if (activeRange === "Today" || activeRange === "Yesterday") {
-            baseData = baseData.slice(-2).map(d => ({ ...d, [activeMetric]: (d as Record<string, any>)[activeMetric] * 0.9 }));
+            baseData = baseData.slice(-2).map(d => ({ ...d, [activeMetric]: (d as unknown as Record<string, number>)[activeMetric] * 0.9 }));
         } else if (activeRange.includes("Month")) {
             baseData = baseData.filter(d => d.date.includes(activeRange.split(":")[1]?.trim() || "Mar"));
         }
         return baseData.map(d => ({
             date: d.date,
-            value: (d as Record<string, any>)[activeMetric]
+            value: (d as unknown as Record<string, number>)[activeMetric]
         }));
     };
 
@@ -198,12 +198,12 @@ export default function ReportsPage() {
                         { key: "revenue", ...summary.revenue },
                         { key: "impressions", ...summary.impressions },
                         { key: "ecpm", ...summary.ecpm }
-                    ].map((item, idx) => {
+                    ].map((item) => {
                         const isActive = activeMetric === item.key;
                         return (
                             <div
                                 key={item.key}
-                                onClick={() => setActiveMetric(item.key as any)}
+                                onClick={() => setActiveMetric(item.key as "revenue" | "impressions" | "ecpm")}
                                 className={`flex flex-col justify-between rounded-lg border px-3 py-2.5 min-w-[150px] flex-1 cursor-pointer transition-all ${isActive
                                     ? "bg-[#3e4cb4] border-[#3e4cb4] text-white shadow-md shadow-blue-500/20"
                                     : "bg-white border-gray-200 dark:bg-white/[0.03] dark:border-gray-800 text-gray-900 dark:text-white hover:border-gray-300"

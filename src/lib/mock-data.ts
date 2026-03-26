@@ -265,7 +265,7 @@ export const DETAILED_EARNINGS = [
 
 // Add specific country to mock detailed earnings for demo
 if (DETAILED_EARNINGS[0]) {
-    (DETAILED_EARNINGS[0] as any).user_country = "India";
+    (DETAILED_EARNINGS[0] as Record<string, unknown>).user_country = "India";
 }
 
 export const SCHEDULED_REPORTS = [

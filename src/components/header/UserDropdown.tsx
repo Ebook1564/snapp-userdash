@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+
 import Link from "next/link";
 import React, { useState } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
@@ -10,7 +10,7 @@ import { useUser } from "@/context/UserContext";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const { isExpanded, isMobileOpen, isHovered } = useSidebar();
+  const {  } = useSidebar();
   const { clientName, clientEmail, setClientEmail } = useUser(); // Include email and setter
 
   const toggleDropdown = (e: React.MouseEvent<HTMLButtonElement>) => {

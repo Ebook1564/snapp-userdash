@@ -147,7 +147,7 @@ export default function DashboardPage() {
   const chartSeries = [
     {
       name: activeMetric.toUpperCase(),
-      data: currentChartData.map((d) => (d as Record<string, any>)[activeMetric]),
+      data: currentChartData.map((d) => (d as any)[activeMetric] as number),
     },
   ];
 

@@ -43,6 +43,16 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsLoading(false);
   }, []);
 
+  const updateClientCountry = (country: string | null) => {
+    console.log("[UserContext] Updating clientCountry to:", country);
+    setClientCountry(country);
+    if (country === null) {
+      Cookies.remove("clientCountry");
+    } else {
+      Cookies.set("clientCountry", country, { expires: 7 });
+    }
+  };
+
   // Fetch profile to get country if not already set or whenever email changes
   useEffect(() => {
     const fetchProfile = async () => {
@@ -68,7 +78,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     fetchProfile();
-  }, [clientEmail]);
+  }, [clientEmail, clientCountry, updateClientCountry]);
 
   const updateClientName = (name: string) => {
     setClientName(name);
@@ -87,15 +97,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const updateClientCountry = (country: string | null) => {
-    console.log("[UserContext] Updating clientCountry to:", country);
-    setClientCountry(country);
-    if (country === null) {
-      Cookies.remove("clientCountry");
-    } else {
-      Cookies.set("clientCountry", country, { expires: 7 });
-    }
-  };
 
   return (
     <UserContext.Provider

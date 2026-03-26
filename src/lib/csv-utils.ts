@@ -1,7 +1,7 @@
 /**
  * Utility to export data to CSV and trigger a browser download
  */
-export const downloadCSV = (data: any[], filename: string, headers?: string[]) => {
+export const downloadCSV = (data: Record<string, unknown>[], filename: string, headers?: string[]) => {
     if (data.length === 0) return;
 
     const csvRows: string[] = [];
