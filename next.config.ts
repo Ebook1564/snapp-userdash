@@ -4,9 +4,9 @@ const basePath = isProd ? '/tailadmin-nextjs' : '';
 const nextConfig: NextConfig = {
   /* config options here */
 
-  trailingSlash: true,
-  basePath: basePath,
-  assetPrefix: basePath,
+  trailingSlash: false,
+  basePath: '',
+  assetPrefix: '',
   images: {
     unoptimized: true
   },
