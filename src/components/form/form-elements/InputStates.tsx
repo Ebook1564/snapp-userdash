@@ -16,7 +16,7 @@ export default function InputStates() {
     return isValidEmail;
   };
 
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const value = e.target.value;
     setEmail(value);
     validateEmail(value);
