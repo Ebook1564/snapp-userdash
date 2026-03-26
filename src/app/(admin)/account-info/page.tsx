@@ -20,10 +20,8 @@ export default function AccountInfoPage() {
     account_type?: string | null;
     account_id?: string | null;
     contracting_entity?: string | null;
-    [key: string]: any;
+    [key: string]: unknown;
   }>({});
-  const [isLoadingProfile, setIsLoadingProfile] = useState(false);
-  const [profileError, setProfileError] = useState<string | null>(null);
   const [selectedProperty, setSelectedProperty] = useState<string | null>(null);
   const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
 
@@ -32,8 +30,6 @@ export default function AccountInfoPage() {
     const fetchProfile = async () => {
       if (!clientEmail) return;
 
-      setIsLoadingProfile(true);
-      setProfileError(null);
       try {
         // include debug flag in dev so server returns rawRow for diagnostics
         const res = await fetch("/api/user/profile", {
@@ -45,7 +41,6 @@ export default function AccountInfoPage() {
         const data = await res.json();
         if (!res.ok) {
           console.error("Failed to fetch profile:", data);
-          setProfileError(data?.error || "Failed to fetch profile");
           return;
         }
 
@@ -59,27 +54,12 @@ export default function AccountInfoPage() {
         }
       } catch (err) {
         console.error("Error fetching profile:", err);
-        setProfileError((err as Error).message || "Error fetching profile");
-      } finally {
-        setIsLoadingProfile(false);
       }
     };
 
     fetchProfile();
-  }, [clientEmail]);
+  }, [clientEmail, setClientCountry]);
 
-  // Only show the requested personal information fields
-  const personalFields = [
-    { label: "First Name", value: (userProfile as any).username || (userProfile as any).user_name || userProfile.first_name || clientName || "-" },
-    { label: "Email address", value: (userProfile as any).useremail || userProfile.email || clientEmail || "-" },
-    {
-      label: "Phone",
-      value:
-        (userProfile.country_code ? `${userProfile.country_code} ` : "") + (userProfile.phone || "-"),
-    },
-    { label: "Country Code", value: userProfile.country_code || "-" },
-    { label: "Country", value: userProfile.country_name || "-" },
-  ];
 
   return (
     <div className="space-y-6">
@@ -104,19 +84,21 @@ export default function AccountInfoPage() {
             {/* Row: Account Name */}
             <div className="flex items-center justify-between">
               <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">Account Name</div>
-              <div className="text-sm text-gray-900 dark:text-white/90">{(userProfile.username || userProfile.user_name || userProfile.first_name) || clientName || (userProfile as any).useremail || clientEmail || "-"}</div>
+              <div className="text-sm text-gray-900 dark:text-white/90">
+                {(userProfile.username as string || userProfile.user_name as string || userProfile.first_name) || clientName || (userProfile.useremail as string) || clientEmail || "-"}
+              </div>
             </div>
 
             {/* Row: Account Type */}
             <div className="flex items-center justify-between">
               <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">Account Type</div>
-              <div className="text-sm text-gray-900 dark:text-white/90">{(userProfile as any).account_type || "Business"}</div>
+              <div className="text-sm text-gray-900 dark:text-white/90">{(userProfile.account_type as string) || "Business"}</div>
             </div>
 
             {/* Row: Account ID / Parent ID (same value) */}
             <div className="flex items-center justify-between">
               <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">Account ID / Parent ID</div>
-              <div className="text-sm text-gray-900 dark:text-white/90">{userProfile.id ?? (userProfile as any).account_id ?? clientEmail ?? "-"}</div>
+              <div className="text-sm text-gray-900 dark:text-white/90">{userProfile.id ?? (userProfile.account_id as string) ?? clientEmail ?? "-"}</div>
             </div>
 
             {/* Row: Domicile */}

@@ -22,19 +22,19 @@ export default function ReportsPage() {
     const getSimulatedChartData = () => {
         let baseData = [...chartData];
         if (activeRange === "Today" || activeRange === "Yesterday") {
-            baseData = baseData.slice(-2).map(d => ({ ...d, [activeMetric]: (d as any)[activeMetric] * 0.9 }));
+            baseData = baseData.slice(-2).map(d => ({ ...d, [activeMetric]: (d as Record<string, any>)[activeMetric] * 0.9 }));
         } else if (activeRange.includes("Month")) {
             baseData = baseData.filter(d => d.date.includes(activeRange.split(":")[1]?.trim() || "Mar"));
         }
         return baseData.map(d => ({
             date: d.date,
-            value: (d as any)[activeMetric]
+            value: (d as Record<string, any>)[activeMetric]
         }));
     };
 
     const currentChartData = getSimulatedChartData();
 
-    const chartOptions: any = {
+    const chartOptions: import("apexcharts").ApexOptions = {
         chart: {
             type: "line",
             toolbar: { show: false },
@@ -120,7 +120,7 @@ export default function ReportsPage() {
                 <h1 className="text-xl font-bold text-gray-900 dark:text-white/90">Reports</h1>
                 <div className="flex items-center gap-2">
                     <button className="flex items-center gap-1.5 rounded bg-orange-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-orange-600">
-                        <span>See What's New</span>
+                        <span>See What&apos;s New</span>
                     </button>
                 </div>
             </div>

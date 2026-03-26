@@ -44,7 +44,7 @@ export default function DashboardPage() {
     }
 
     // Apply scale to the filtered data
-    return filtered.map((d: any, idx: number) => ({
+    return filtered.map((d: { revenue: number; impressions: number; date: string }, idx: number) => ({
       ...d,
       revenue: d.revenue * scale,
       impressions: Math.round(d.impressions * impScale),
@@ -55,15 +55,14 @@ export default function DashboardPage() {
 
   // Dynamically calculate summary metrics from already scaled visible data
   const dynamicSummary = useMemo(() => {
-    const totalRevRaw = currentChartData.reduce((acc: number, curr: any) => acc + curr.revenue, 0);
-    const totalImpRaw = currentChartData.reduce((acc: number, curr: any) => acc + curr.impressions, 0);
-    const totalDauRaw = currentChartData.reduce((acc: number, curr: any) => acc + curr.dau, 0);
+    const totalRevRaw = currentChartData.reduce((acc: number, curr: { revenue: number }) => acc + curr.revenue, 0);
+    const totalImpRaw = currentChartData.reduce((acc: number, curr: { impressions: number }) => acc + curr.impressions, 0);
+    const totalDauRaw = currentChartData.reduce((acc: number, curr: { dau: number }) => acc + curr.dau, 0);
 
     // If viewing month-scale ranges, simulate 30-day projection for realism
     const monthProjection = (activeRange.includes("Month") || activeRange.includes("Days")) ? 2.2 : 1;
     const totalRev = totalRevRaw * monthProjection;
     const totalImp = totalImpRaw * monthProjection;
-    const totalDau = totalDauRaw * monthProjection;
 
     const avgEcpm = totalImp > 0 ? (totalRev / totalImp) * 1000 : 0;
 
@@ -84,7 +83,7 @@ export default function DashboardPage() {
     };
   }, [currentChartData, activeRange, userMetrics, clientEmail]);
 
-  const chartOptions: any = {
+  const chartOptions: import("apexcharts").ApexOptions = {
     chart: {
       type: "line",
       toolbar: { show: false },
@@ -149,7 +148,7 @@ export default function DashboardPage() {
   const chartSeries = [
     {
       name: activeMetric.toUpperCase(),
-      data: currentChartData.map((d) => (d as any)[activeMetric]),
+      data: currentChartData.map((d) => (d as Record<string, any>)[activeMetric]),
     },
   ];
 
@@ -162,7 +161,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           <button className="flex items-center gap-1.5 rounded bg-orange-500 px-3 py-1 text-xs font-medium text-white shadow-sm hover:bg-orange-600">
-            <span>See What's New</span>
+            <span>See What&apos;s New</span>
           </button>
           <button
             onClick={handleExportCSV}
@@ -245,7 +244,7 @@ export default function DashboardPage() {
       {/* Summary Cards */}
       <div className="flex items-center gap-3">
         <div className="flex flex-1 gap-3">
-          {(Object.entries(dynamicSummary) as [keyof typeof dynamicSummary, any][]).map(([key, item]) => {
+          {(Object.entries(dynamicSummary) as [keyof typeof dynamicSummary, { label: string; value: string }][]).map(([key, item]) => {
             const isActive = activeMetric === key;
             return (
               <div

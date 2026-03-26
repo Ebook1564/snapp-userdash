@@ -2,23 +2,21 @@
 
 import React, { useState } from "react";
 import { useUser } from "@/context/UserContext";
-import { PAYMENT_DATA } from "@/lib/mock-data";
 import { fetchDetailedEarnings } from "@/lib/user-data-table";
 import { downloadCSV } from "@/lib/csv-utils";
 
 type TabType = "Earnings" | "Remittances";
 
 export default function PaymentsPage() {
-    const { clientName, clientEmail } = useUser();
+    const { clientEmail } = useUser();
     const [activeTab, setActiveTab] = useState<TabType>("Earnings");
     const [expandedMonth, setExpandedMonth] = useState<string | null>(null);
-    const [searchQuery, setSearchQuery] = useState("");
 
     // Fetch user-specific earnings entries
     const userDetailedEarnings = fetchDetailedEarnings(clientEmail);
 
     const handleDownloadAll = () => {
-        const exportData = userDetailedEarnings.map((item: any) => ({
+        const exportData = userDetailedEarnings.map((item: { month: string; year: string; netEarnings: string; grossTotal: string; status: string }) => ({
             MonthYear: `${item.month} ${item.year}`,
             NetEarnings: item.netEarnings,
             GrossTotal: item.grossTotal,
@@ -27,10 +25,6 @@ export default function PaymentsPage() {
         downloadCSV(exportData, `payments-${clientEmail || "user"}`);
     };
 
-    const handleDownload = (id: string) => {
-        console.log(`Downloading invoice ${id}...`);
-        alert(`Initializing download for ${id}. In a real app, this would fetch a PDF.`);
-    };
 
     const toggleMonth = (monthYear: string) => {
         setExpandedMonth(expandedMonth === monthYear ? null : monthYear);
@@ -83,9 +77,8 @@ export default function PaymentsPage() {
                         <div className="w-[40%] text-right pr-10">Net Earnings</div>
                     </div>
 
-                    {/* Monthly List */}
                     <div className="space-y-3">
-                        {userDetailedEarnings.map((item: any) => {
+                        {userDetailedEarnings.map((item: { month: string; year: string; netEarnings: string }) => {
                             const isExpanded = expandedMonth === `${item.month} ${item.year}`;
                             return (
                                 <div key={`${item.month}-${item.year}`} className="rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-white/[0.02] shadow-sm overflow-hidden transition-all">
@@ -111,7 +104,7 @@ export default function PaymentsPage() {
                                                 <div>
                                                     <h3 className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Revenue from properties</h3>
                                                     <div className="space-y-4">
-                                                        {item.properties.map((prop: any, idx: number) => (
+                                                        {(item as any).properties.map((prop: { name: string; revenue: string }, idx: number) => (
                                                             <div key={idx} className="flex items-center justify-between pb-4 border-b border-gray-50 dark:border-gray-800/50 last:border-0 last:pb-0">
                                                                 <div className="flex items-center gap-3">
                                                                     <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{prop.name}</span>
@@ -124,7 +117,7 @@ export default function PaymentsPage() {
 
                                                 {/* Deductions */}
                                                 <div className="space-y-3">
-                                                    {item.deductions.map((deduct: any, idx: number) => (
+                                                    {(item as any).deductions.map((deduct: { label: string; amount: string }, idx: number) => (
                                                         <div key={idx} className="flex items-center justify-between">
                                                             <div className="flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400">
                                                                 {deduct.label}
@@ -141,18 +134,18 @@ export default function PaymentsPage() {
                                                 <div className="space-y-4 pt-2 border-t border-gray-100 dark:border-gray-800">
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider">Gross Total</span>
-                                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{item.grossTotal}</span>
+                                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{(item as any).grossTotal}</span>
                                                     </div>
                                                     {/* Conversion row hidden or simplified */}
                                                     <div className="hidden items-center justify-between pl-6 text-xs font-medium text-gray-500 dark:text-gray-400">
-                                                        <span>{item.conversion.label}</span>
-                                                        <span>{item.conversion.total}</span>
+                                                        <span>{(item as any).conversion.label}</span>
+                                                        <span>{(item as any).conversion.total}</span>
                                                     </div>
                                                 </div>
 
                                                 <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                                                     <span className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider">Grand Total</span>
-                                                    <span className="text-sm font-extrabold text-[#3e4cb4] dark:text-blue-400">{item.grandTotal}</span>
+                                                    <span className="text-sm font-extrabold text-[#3e4cb4] dark:text-blue-400">{(item as any).grandTotal}</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -189,7 +182,7 @@ export default function PaymentsPage() {
                 </div>
                 <div>
                     <p className="text-[11px] text-gray-600 leading-relaxed dark:text-gray-400">
-                        Invoices are generated on the 1st of every month for the previous month's earnings.
+                        Invoices are generated on the 1st of every month for the previous month&apos;s earnings.
                         Payments are typically processed within 30 days of invoice generation (Net-30).
                         If you notice any discrepancy, please contact our support team immediately.
                     </p>

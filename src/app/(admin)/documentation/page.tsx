@@ -35,8 +35,8 @@ const documentationArticles: DocArticle[] = [
           
           <h3>Creating Your Account</h3>
           <p>
-            To begin, you'll need to create an account. Simply navigate to the sign-up page and provide
-            your business information. Once your account is verified, you'll gain access to the full
+            To begin, you&apos;ll need to create an account. Simply navigate to the sign-up page and provide
+            your business information. Once your account is verified, you&apos;ll gain access to the full
             suite of features.
           </p>
           
@@ -53,7 +53,7 @@ const documentationArticles: DocArticle[] = [
           <h3>Setting Up Your First Game</h3>
           <p>
             After logging in, you can add your first game to the platform. Navigate to the Creatives
-            Library section and click "Add New Game". Fill in the required information including:
+            Library section and click &quot;Add New Game&quot;. Fill in the required information including:
           </p>
           <ul>
             <li>Game name and description</li>
@@ -90,7 +90,7 @@ const documentationArticles: DocArticle[] = [
           
           <h3>Planning Your Campaign</h3>
           <p>
-            Before creating a campaign, it's important to define your objectives. Are you looking to:
+            Before creating a campaign, it&apos;s important to define your objectives. Are you looking to:
           </p>
           <ul>
             <li>Increase user acquisition?</li>
@@ -232,7 +232,7 @@ const documentationArticles: DocArticle[] = [
           </p>
           <ol>
             <li>Navigate to the Creatives Library</li>
-            <li>Click "Upload New Asset"</li>
+            <li>Click &quot;Upload New Asset&quot;</li>
             <li>Select the files you want to upload</li>
             <li>Add metadata (tags, descriptions, etc.)</li>
             <li>Assign to specific games or campaigns</li>
@@ -297,7 +297,7 @@ const documentationArticles: DocArticle[] = [
                 How do I reset my password?
               </h3>
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                Click on "Forgot Password" on the login page, enter your email address, and follow
+                Click on &quot;Forgot Password&quot; on the login page, enter your email address, and follow
                 the instructions sent to your email. The reset link will expire after 24 hours for
                 security reasons.
               </p>
@@ -354,7 +354,7 @@ const documentationArticles: DocArticle[] = [
               <p className="text-sm text-gray-600 dark:text-gray-400">
                 Yes, you can export your analytics data, campaign reports, and asset lists in various
                 formats including CSV, PDF, and Excel. Navigate to the relevant section and look for
-                the "Export" button.
+                the &quot;Export&quot; button.
               </p>
             </div>
           </div>
@@ -597,7 +597,7 @@ export default function DocumentationPage() {
                 Still Need Help?
               </h3>
               <p className="mb-3 text-xs text-brand-700 dark:text-brand-400">
-                Can't find what you're looking for? Our support team is ready to assist you.
+                Can&apos;t find what you&apos;re looking for? Our support team is ready to assist you.
               </p>
               <a
                 href="/support"

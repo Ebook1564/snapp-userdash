@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { REPORT_DATA, PROPERTIES, REVENUE_BY_GAME } from "@/lib/mock-data";
+import { REPORT_DATA, PROPERTIES } from "@/lib/mock-data";
 
 export default function PropertiesOverviewPage() {
   const { clientName } = useUser();
@@ -16,8 +16,6 @@ export default function PropertiesOverviewPage() {
 
     const latest = chartData[chartData.length - 1];
     const previous = chartData[chartData.length - 2];
-    const last7 = chartData.slice(-7).reduce((acc, curr) => acc + curr.revenue, 0);
-    const monthlySum = chartData.reduce((acc, curr) => acc + curr.revenue, 0);
 
     const todayVal = latest.revenue * scale;
     const yesterdayVal = previous.revenue * scale;
@@ -51,10 +49,6 @@ export default function PropertiesOverviewPage() {
     };
   }, [chartData]);
 
-  const filteredProperties = PROPERTIES.filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.type.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="space-y-6 pb-10 max-w-[1200px] mx-auto">

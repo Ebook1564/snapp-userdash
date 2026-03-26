@@ -76,7 +76,7 @@ export default function ContactTeamPage() {
             Contact Our Team
           </h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-            Get in touch with our team. We're here to help with any questions
+            Get in touch with our team. We&apos;re here to help with any questions
             or inquiries.
           </p>
         </div>
@@ -88,7 +88,7 @@ export default function ContactTeamPage() {
           <div className="flex items-center gap-2">
             <span className="text-success-600 dark:text-success-400">✓</span>
             <p className="text-sm font-medium text-success-800 dark:text-success-400">
-              Message sent successfully! We'll get back to you soon.
+              Message sent successfully! We&apos;ll get back to you soon.
             </p>
           </div>
         </div>

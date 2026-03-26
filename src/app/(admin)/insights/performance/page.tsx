@@ -225,7 +225,7 @@ export default function GamePerformancePage() {
             retention for better long-term performance.
           </p>
           <div className="mt-4 h-32 flex items-end gap-2">
-            {gamePerformance.map((game, idx) => (
+            {gamePerformance.map((game) => (
               <div key={game.game} className="flex-1 flex flex-col gap-1">
                 <div
                   className="w-full rounded-t bg-brand-500/80 dark:bg-brand-500/60"

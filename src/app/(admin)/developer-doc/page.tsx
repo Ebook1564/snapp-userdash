@@ -87,8 +87,8 @@ export default function DeveloperDocPage() {
           <div className="bg-gray-100 dark:bg-gray-800/50 p-6 rounded-2xl border border-gray-200 dark:border-gray-800">
             <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">About SnappGames</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-              At SnappGames, we are building one of the world's largest distribution networks for digital casual content.
-              Since 2015, we've focused on delivering premium HTML5 experiences (instant games) that publishers
+              At SnappGames, we are building one of the world&apos;s largest distribution networks for digital casual content.
+              Since 2015, we&apos;ve focused on delivering premium HTML5 experiences (instant games) that publishers
               can embed seamlessly. Our partners benefit from significantly higher engagement, retention,
               and a robust ad-revenue sharing program.
             </p>
