@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     if (user.password.startsWith("$2")) {
       try {
         isPasswordValid = await bcrypt.compare(password, user.password);
-      } catch (error) {
+      } catch {
         // If bcrypt comparison fails, treat as invalid
         isPasswordValid = false;
       }

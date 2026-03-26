@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
 
     if (attachment && attachment_filename !== "null") {
       // Validate file type from actual file
-      const mimeType = attachment.type;
+      // const mimeType = attachment.type;
       const extension = attachment_filename.split(".").pop()?.toLowerCase();
       
       if (!allowedFiletypes.includes(extension || "")) {

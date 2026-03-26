@@ -137,7 +137,7 @@ export default function ScheduledReportsPage() {
                     </div>
                     <h2 className="text-lg font-bold text-gray-900 dark:text-white">No active schedules found</h2>
                     <p className="max-w-xs text-center text-xs text-gray-500 dark:text-gray-400 mt-2 leading-relaxed">
-                        Set up daily, weekly, or monthly report intervals. We'll handle the processing and delivery.
+                        Set up daily, weekly, or monthly report intervals. We&apos;ll handle the processing and delivery.
                     </p>
                 </div>
             )}

@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
             // Migration: Add dau column if it somehow missed the CREATE TABLE (or existing table)
             try {
                 await pool.query("ALTER TABLE userdatatable ADD COLUMN IF NOT EXISTS dau INTEGER DEFAULT 0;");
-            } catch (err) {
+            } catch {
                 // Ignore if already exists or IF NOT EXISTS not supported
             }
 
@@ -107,7 +107,7 @@ export async function POST(request: NextRequest) {
             updated_at: row.updated_at
         });
 
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Fetch metrics error:", error);
         return NextResponse.json({ error: "Internal server error" }, { status: 500 });
     }

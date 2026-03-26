@@ -104,7 +104,7 @@ export default function PaymentsPage() {
                                                 <div>
                                                     <h3 className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider mb-4">Revenue from properties</h3>
                                                     <div className="space-y-4">
-                                                        {(item as any).properties.map((prop: { name: string; revenue: string }, idx: number) => (
+                                                        {(item as Record<string, any>).properties.map((prop: { name: string; revenue: string }, idx: number) => (
                                                             <div key={idx} className="flex items-center justify-between pb-4 border-b border-gray-50 dark:border-gray-800/50 last:border-0 last:pb-0">
                                                                 <div className="flex items-center gap-3">
                                                                     <span className="text-sm font-medium text-gray-600 dark:text-gray-400">{prop.name}</span>
@@ -117,7 +117,7 @@ export default function PaymentsPage() {
 
                                                 {/* Deductions */}
                                                 <div className="space-y-3">
-                                                    {(item as any).deductions.map((deduct: { label: string; amount: string }, idx: number) => (
+                                                    {(item as Record<string, any>).deductions.map((deduct: { label: string; amount: string }, idx: number) => (
                                                         <div key={idx} className="flex items-center justify-between">
                                                             <div className="flex items-center gap-1.5 text-xs font-medium text-gray-600 dark:text-gray-400">
                                                                 {deduct.label}
@@ -134,18 +134,18 @@ export default function PaymentsPage() {
                                                 <div className="space-y-4 pt-2 border-t border-gray-100 dark:border-gray-800">
                                                     <div className="flex items-center justify-between">
                                                         <span className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider">Gross Total</span>
-                                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{(item as any).grossTotal}</span>
+                                                        <span className="text-sm font-bold text-gray-900 dark:text-white">{(item as Record<string, any>).grossTotal}</span>
                                                     </div>
                                                     {/* Conversion row hidden or simplified */}
                                                     <div className="hidden items-center justify-between pl-6 text-xs font-medium text-gray-500 dark:text-gray-400">
-                                                        <span>{(item as any).conversion.label}</span>
-                                                        <span>{(item as any).conversion.total}</span>
+                                                        <span>{(item as Record<string, any>).conversion.label}</span>
+                                                        <span>{(item as Record<string, any>).conversion.total}</span>
                                                     </div>
                                                 </div>
 
                                                 <div className="pt-4 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
                                                     <span className="text-[11px] font-bold text-gray-900 dark:text-white uppercase tracking-wider">Grand Total</span>
-                                                    <span className="text-sm font-extrabold text-[#3e4cb4] dark:text-blue-400">{(item as any).grandTotal}</span>
+                                                    <span className="text-sm font-extrabold text-[#3e4cb4] dark:text-blue-400">{(item as Record<string, any>).grandTotal}</span>
                                                 </div>
                                             </div>
                                         </div>

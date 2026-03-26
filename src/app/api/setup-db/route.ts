@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { pool } from "@/lib/db";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
     try {
         // 1. Create the table
         await pool.query(`
@@ -37,11 +37,11 @@ export async function GET(request: NextRequest) {
             success: true,
             message: "Database table 'userdatatable' initialized successfully with mock data."
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error("Database setup error:", error);
         return NextResponse.json({
             success: false,
-            error: error.message
+            error: (error as any).message
         }, { status: 500 });
     }
 }

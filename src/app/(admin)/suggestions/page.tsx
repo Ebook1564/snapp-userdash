@@ -107,7 +107,7 @@ export default function SuggestionsPage() {
                       onClick={() => handleInterest(suggestion.id)}
                       className="px-6 py-3 bg-[#3e4cb4] text-white text-xs font-bold uppercase tracking-widest rounded-md hover:bg-[#34409a] transition-colors shadow-lg shadow-blue-500/10"
                     >
-                      I'M INTERESTED
+                      I&apos;M INTERESTED
                     </button>
                     <button
                       onClick={() => handleDismiss(suggestion.id)}
@@ -135,7 +135,7 @@ export default function SuggestionsPage() {
               </svg>
             </div>
             <h4 className="text-gray-900 dark:text-white font-bold">No {activeTab.toLowerCase()} suggestions</h4>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">You're all caught up!</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">You&apos;re all caught up!</p>
           </div>
         )}
       </div>

@@ -3,7 +3,7 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useUser } from "@/context/UserContext";
-import { REPORT_DATA, PROPERTIES } from "@/lib/mock-data";
+import { REPORT_DATA } from "@/lib/mock-data";
 
 export default function PropertiesOverviewPage() {
   const { clientName } = useUser();

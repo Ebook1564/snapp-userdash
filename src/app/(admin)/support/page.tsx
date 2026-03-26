@@ -93,7 +93,7 @@ ${formData.description}
         return;
       }
 
-      const result = await res.json();
+      await res.json().catch(() => ({}));
       
       setIsSubmitting(false);
       setIsSubmitted(true);
@@ -138,7 +138,7 @@ ${formData.description}
           <div className="flex items-center gap-2">
             <span className="text-success-600 dark:text-success-400">✓</span>
             <p className="text-sm font-medium text-success-800 dark:text-success-400">
-              Support ticket submitted successfully! We'll respond within 24
+              Support ticket submitted successfully! We&apos;ll respond within 24
               hours.
             </p>
           </div>

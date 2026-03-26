@@ -57,7 +57,6 @@ export default function DashboardPage() {
   const dynamicSummary = useMemo(() => {
     const totalRevRaw = currentChartData.reduce((acc: number, curr: { revenue: number }) => acc + curr.revenue, 0);
     const totalImpRaw = currentChartData.reduce((acc: number, curr: { impressions: number }) => acc + curr.impressions, 0);
-    const totalDauRaw = currentChartData.reduce((acc: number, curr: { dau: number }) => acc + curr.dau, 0);
 
     // If viewing month-scale ranges, simulate 30-day projection for realism
     const monthProjection = (activeRange.includes("Month") || activeRange.includes("Days")) ? 2.2 : 1;
