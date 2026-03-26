@@ -8,6 +8,7 @@ export interface UserMetricRow {
     last_7d_revenue: number;
     this_month_revenue: number;
     last_28d_revenue: number;
+    dau: number;
 }
 
 // Map mock users to their deterministic unique metrics
@@ -19,7 +20,8 @@ const createMockRow = (email: string): UserMetricRow => {
         yesterday_revenue: m.yesterday,
         last_7d_revenue: m.last7,
         this_month_revenue: m.month,
-        last_28d_revenue: m.last28
+        last_28d_revenue: m.last28,
+        dau: m.dau
     };
 };
 

@@ -51,7 +51,7 @@ const navItems: NavItem[] = [
   {
     icon: <DocsIcon className="w-5 h-5 flex-shrink-0" />,
     name: "Developer Doc",
-    path: "/developer-doc",
+    path: 'https://docs.snappgames.com',
   },
   {
     icon: <ChatIcon className="w-5 h-5 flex-shrink-0" />,
@@ -78,7 +78,7 @@ const othersItems: NavItem[] = [
   {
     name: "Documentation",
     icon: <DocsIcon className="w-5 h-5 flex-shrink-0" />,
-    path: "/documentation",
+    path:  'https://docs.snappgames.com',
   },
 ];
 

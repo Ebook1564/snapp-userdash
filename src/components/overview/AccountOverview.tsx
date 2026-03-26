@@ -80,6 +80,10 @@ export default function AccountOverview() {
         value: `$${last28Val.toFixed(2)}`,
         change: "+6.8% vs. previous 28 days",
         isPositive: true
+      },
+      dau: {
+        value: userMetrics.dau.toLocaleString(),
+        label: "Active Users"
       }
     };
   }, [clientEmail, dbMetrics]);
@@ -110,7 +114,7 @@ export default function AccountOverview() {
       })));
 
       // We use the memoized dynamicFinancialMetrics instead of static OVERVIEW_DATA
-      setFinancialMetrics(dynamicFinancialMetrics);
+      setFinancialMetrics(dynamicFinancialMetrics as any);
 
       setIsDataLoading(false);
     };
@@ -238,8 +242,8 @@ export default function AccountOverview() {
           <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sm:p-8">
             <div className="animate-pulse space-y-4">
               <div className="h-8 bg-gray-200 rounded w-1/3"></div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-                {[...Array(5)].map((_, i) => (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+                {[...Array(6)].map((_, i) => (
                   <div key={i} className="space-y-2">
                     <div className="h-4 bg-gray-200 rounded w-1/2"></div>
                     <div className="h-6 bg-gray-200 rounded"></div>
@@ -282,7 +286,7 @@ export default function AccountOverview() {
                 </div>
 
                 {/* Financial Metrics Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 md:gap-5 mb-3 sm:mb-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5 mb-3 sm:mb-4">
                   {/* Today */}
                   <div className="border-b sm:border-b-0 sm:border-r border-gray-200 pb-2 sm:pb-0 sm:pr-3 md:pr-4 lg:pr-6 last:border-r-0">
                     <p className="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-gray-500 mb-1">
@@ -346,7 +350,7 @@ export default function AccountOverview() {
                   </div>
 
                   {/* Last 28 Days */}
-                  <div className="pb-2 sm:pb-0">
+                  <div className="border-b sm:border-b-0 sm:border-r border-gray-200 pb-2 sm:pb-0 sm:pr-3 md:pr-4 lg:pr-6 last:border-r-0">
                     <p className="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-gray-500 mb-1">
                       Last 28 Days
                     </p>
@@ -362,6 +366,21 @@ export default function AccountOverview() {
                       {financialMetrics.last28Days.change}
                     </p>
                   </div>
+
+                  {/* Active Users */}
+                  {clientEmail?.toLowerCase().trim() !== "baisoyagourang111@gmail.com" && (
+                    <div className="pb-2 sm:pb-0">
+                      <p className="text-[10px] sm:text-xs font-medium uppercase tracking-wide text-gray-500 mb-1">
+                        Active Users
+                      </p>
+                      <p className="text-sm sm:text-base md:text-lg font-semibold text-gray-900 mb-0.5 break-words">
+                        {(financialMetrics as any).dau?.value || "0"}
+                      </p>
+                      <p className="text-[10px] sm:text-xs text-gray-500 break-words leading-tight">
+                        Monthly avg
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

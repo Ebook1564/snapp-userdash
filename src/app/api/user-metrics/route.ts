@@ -23,10 +23,18 @@ export async function POST(request: NextRequest) {
                     last_7d_revenue DECIMAL(10, 3) DEFAULT 0.000,
                     this_month_revenue DECIMAL(10, 3) DEFAULT 0.000,
                     last_28d_revenue DECIMAL(10, 3) DEFAULT 0.000,
+                    dau INTEGER DEFAULT 0,
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
             `);
+
+            // Migration: Add dau column if it somehow missed the CREATE TABLE (or existing table)
+            try {
+                await pool.query("ALTER TABLE userdatatable ADD COLUMN IF NOT EXISTS dau INTEGER DEFAULT 0;");
+            } catch (err) {
+                // Ignore if already exists or IF NOT EXISTS not supported
+            }
 
             // Check if table is empty
             const checkEmpty = await pool.query("SELECT COUNT(*) FROM userdatatable");
@@ -41,10 +49,10 @@ export async function POST(request: NextRequest) {
                 for (const mail of seedEmails) {
                     const metrics = generateMetricsForEmail(mail);
                     await pool.query(`
-                        INSERT INTO userdatatable (useremail, today_revenue, yesterday_revenue, last_7d_revenue, this_month_revenue, last_28d_revenue)
-                        VALUES ($1, $2, $3, $4, $5, $6)
+                        INSERT INTO userdatatable (useremail, today_revenue, yesterday_revenue, last_7d_revenue, this_month_revenue, last_28d_revenue, dau)
+                        VALUES ($1, $2, $3, $4, $5, $6, $7)
                         ON CONFLICT (useremail) DO NOTHING;
-                    `, [mail, metrics.today, metrics.yesterday, metrics.last7, metrics.month, metrics.last28]);
+                    `, [mail, metrics.today, metrics.yesterday, metrics.last7, metrics.month, metrics.last28, metrics.dau]);
                 }
             }
         } catch (e) {
@@ -63,10 +71,10 @@ export async function POST(request: NextRequest) {
             const metrics = generateMetricsForEmail(normalizedEmail);
 
             const insertResult = await pool.query(`
-                INSERT INTO userdatatable (useremail, today_revenue, yesterday_revenue, last_7d_revenue, this_month_revenue, last_28d_revenue)
-                VALUES ($1, $2, $3, $4, $5, $6)
+                INSERT INTO userdatatable (useremail, today_revenue, yesterday_revenue, last_7d_revenue, this_month_revenue, last_28d_revenue, dau)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 RETURNING *;
-            `, [normalizedEmail, metrics.today, metrics.yesterday, metrics.last7, metrics.month, metrics.last28]);
+            `, [normalizedEmail, metrics.today, metrics.yesterday, metrics.last7, metrics.month, metrics.last28, metrics.dau]);
 
             const newRow = insertResult.rows[0];
             return NextResponse.json({
@@ -77,6 +85,7 @@ export async function POST(request: NextRequest) {
                 last_7d_revenue: parseFloat(newRow.last_7d_revenue),
                 this_month_revenue: parseFloat(newRow.this_month_revenue),
                 last_28d_revenue: parseFloat(newRow.last_28d_revenue),
+                dau: parseInt(newRow.dau),
                 created_at: newRow.created_at,
                 updated_at: newRow.updated_at
             });
@@ -93,6 +102,7 @@ export async function POST(request: NextRequest) {
             last_7d_revenue: parseFloat(row.last_7d_revenue),
             this_month_revenue: parseFloat(row.this_month_revenue),
             last_28d_revenue: parseFloat(row.last_28d_revenue),
+            dau: parseInt(row.dau),
             created_at: row.created_at,
             updated_at: row.updated_at
         });

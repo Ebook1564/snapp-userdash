@@ -2,6 +2,7 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export default function ResetPasswordForm() {
   const [showOldPassword, setShowOldPassword] = useState(false);
@@ -54,7 +55,7 @@ export default function ResetPasswordForm() {
       }
 
       setSuccess("Password updated successfully! Redirecting to login...");
-      
+
       // Redirect to login after 2 seconds
       setTimeout(() => {
         router.push("/signin");
@@ -68,195 +69,167 @@ export default function ResetPasswordForm() {
   };
 
   return (
-    <div 
-      className="min-h-screen w-full max-w-full overflow-x-hidden flex items-center justify-center p-4 sm:p-6 lg:p-8"
-      style={{ backgroundColor: "#1A0033" }}
-    >
-      {/* Reset Password Card */}
-      <div 
-        className="w-full max-w-md rounded-2xl p-8 sm:p-10 lg:p-12 shadow-2xl"
-        style={{ backgroundColor: "#2C2C4A" }}
-      >
-        {/* Title */}
-        <h1 className="text-4xl sm:text-5xl lg:text-6xl font-semibold text-white text-center mb-10 sm:mb-12">
-          Reset Password
-        </h1>
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#F3F0FF] p-4 sm:p-8 font-outfit">
+      {/* Outer Card Container with entrance animation */}
+      <div className="w-full max-w-5xl bg-white rounded-[2rem] shadow-[0_20px_50px_rgba(123,81,179,0.15)] flex flex-col lg:flex-row overflow-hidden min-h-[650px] transform transition-all hover:shadow-[0_30px_60px_rgba(123,81,179,0.2)] animate-in fade-in zoom-in-95 duration-700">
 
-        {/* Success Message */}
-        {success && (
-          <div className="mb-6 p-3 rounded-lg bg-green-500/20 border border-green-500/50">
-            <p className="text-sm text-green-300 text-center">{success}</p>
-          </div>
-        )}
+        {/* Left Column - Welcome Message (Vibrant Purple Pane with Logo Watermark) */}
+        <div className="relative flex-1 bg-gradient-to-br from-[#7B51B3] via-[#6A48A3] to-[#402C66] text-white p-12 lg:p-16 flex flex-col justify-center overflow-hidden">
 
-        {/* Error Message */}
-        {error && (
-          <div className="mb-6 p-3 rounded-lg bg-red-500/20 border border-red-500/50">
-            <p className="text-sm text-red-300 text-center">{error}</p>
-          </div>
-        )}
-
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Email Field */}
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-2">
-              {/* Email Icon */}
-              <svg
-                className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                />
-              </svg>
-              {/* Input with underline style */}
-              <div className="flex-1 relative">
-                <input
-                  type="email"
-                  placeholder="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 text-base sm:text-lg focus:outline-none pb-2 border-b-2 border-gray-600 focus:border-white transition-colors"
-                  autoComplete="email"
-                />
-              </div>
+          {/* Logo Watermark Background */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-[0.07]">
+            <div className="absolute -right-20 -bottom-20 w-[600px] h-[600px] transform rotate-12 scale-150">
+              <Image src="/images/logo/s-logo-exact.png" alt="Watermark" layout="fill" objectFit="contain" priority />
+            </div>
+            <div className="absolute -left-20 -top-20 w-[400px] h-[400px] transform -rotate-12 opacity-50">
+              <Image src="/images/logo/s-logo-exact.png" alt="Watermark" layout="fill" objectFit="contain" priority />
             </div>
           </div>
 
-          {/* Old Password Field */}
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-2">
-              {/* Padlock Icon */}
-              <svg
-                className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-              {/* Input with underline style */}
-              <div className="flex-1 relative">
-                <input
-                  type={showOldPassword ? "text" : "password"}
-                  placeholder="old password"
-                  value={oldPassword}
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 text-base sm:text-lg focus:outline-none pb-2 border-b-2 border-gray-600 focus:border-white transition-colors pr-10"
-                  autoComplete="current-password"
-                />
-                {/* Show/Hide Password Toggle */}
-                <button
-                  type="button"
-                  onClick={() => setShowOldPassword(!showOldPassword)}
-                  className="absolute right-0 top-0 bottom-2 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  {showOldPassword ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  )}
-                </button>
-              </div>
-            </div>
+          {/* Abstract Premium Decorative Elements */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-[-10%] right-[-10%] w-[400px] h-[400px] bg-white/10 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-[-20%] left-[-10%] w-[500px] h-[500px] bg-purple-400/10 rounded-full blur-3xl"></div>
           </div>
 
-          {/* New Password Field */}
-          <div className="relative">
-            <div className="flex items-center gap-3 mb-2">
-              {/* Padlock Icon */}
-              <svg
-                className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400 flex-shrink-0"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-              {/* Input with underline style */}
-              <div className="flex-1 relative">
-                <input
-                  type={showNewPassword ? "text" : "password"}
-                  placeholder="new password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  className="w-full bg-transparent text-gray-300 placeholder-gray-500 text-base sm:text-lg focus:outline-none pb-2 border-b-2 border-gray-600 focus:border-white transition-colors pr-10"
-                  autoComplete="new-password"
-                />
-                {/* Show/Hide Password Toggle */}
-                <button
-                  type="button"
-                  onClick={() => setShowNewPassword(!showNewPassword)}
-                  className="absolute right-0 top-0 bottom-2 flex items-center text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  {showNewPassword ? (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                  ) : (
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
-                    </svg>
-                  )}
-                </button>
-              </div>
+          <div className="relative z-10 max-w-md">
+            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full mb-6 border border-white/20">
+              <span className="w-2 h-2 rounded-full bg-purple-300 animate-ping"></span>
+              <span className="text-sm font-medium tracking-wide">Security Center</span>
             </div>
+            <h1 className="text-5xl lg:text-6xl font-extrabold mb-6 tracking-tight leading-[1.1]">
+              Snappgames <br />
+              <span className="text-purple-200 text-4xl lg:text-5xl">Business</span>
+            </h1>
+            <p className="text-xl text-white/80 font-light leading-relaxed mb-8 max-w-[280px]">
+              Secure your Snappgames Business account with a new password.
+            </p>
+          </div>
+        </div>
+
+        {/* Right Column - Reset Form (White Area) */}
+        <div className="flex-1 bg-white p-8 sm:p-12 lg:p-16 flex flex-col justify-center">
+
+          {/* Custom Logo Integration - Plain style as requested */}
+          <div className="w-full flex justify-center mb-10">
+            <Image src="/images/logo/s-logo-exact.png" alt="S Logo" width={80} height={80} className="hover:scale-110 transition-transform duration-300 drop-shadow-xl" />
           </div>
 
-          {/* Reset Password Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting || !email || !oldPassword || !newPassword}
-            className="w-full py-3 sm:py-4 rounded-xl text-white font-medium text-base sm:text-lg shadow-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-lg"
-            style={{ backgroundColor: "#5A5A7A" }}
-          >
-            {isSubmitting ? (
-              <span className="flex items-center justify-center gap-2">
+          <div className="mb-10 text-center lg:text-left">
+            <h2 className="text-3xl font-bold text-gray-900 mb-2 tracking-tight">Reset Password</h2>
+            <p className="text-gray-500 font-medium">Please enter your details to continue</p>
+          </div>
+
+          {success && (
+            <div className="mb-6 p-4 rounded-2xl bg-green-50 text-green-600 text-sm border border-green-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="p-1 bg-green-100 rounded-lg">
+                <svg className="w-4 h-4 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="font-semibold leading-relaxed">{success}</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="mb-6 p-4 rounded-2xl bg-red-50 text-red-600 text-sm border border-red-100 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="p-1 bg-red-100 rounded-lg">
+                <svg className="w-4 h-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <p className="font-semibold leading-relaxed">{error}</p>
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Email Input */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#7B51B3] transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              </div>
+              <input
+                type="email"
+                placeholder="Email Address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-gray-50/50 text-gray-900 border-none ring-1 ring-gray-200 placeholder-gray-400 text-base rounded-2xl py-4 pl-14 pr-4 focus:ring-2 focus:ring-[#7B51B3] focus:bg-white outline-none transition-all shadow-sm"
+                autoComplete="email"
+              />
+            </div>
+
+            {/* Old Password Input */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#7B51B3] transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              </div>
+              <input
+                type={showOldPassword ? "text" : "password"}
+                placeholder="Old Password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+                className="w-full bg-gray-50/50 text-gray-900 border-none ring-1 ring-gray-200 placeholder-gray-400 text-base rounded-2xl py-4 pl-14 pr-14 focus:ring-2 focus:ring-[#7B51B3] focus:bg-white outline-none transition-all shadow-sm"
+                autoComplete="current-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowOldPassword(!showOldPassword)}
+                className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#7B51B3] transition-colors"
+              >
+                {showOldPassword ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                )}
+              </button>
+            </div>
+
+            {/* New Password Input */}
+            <div className="relative group">
+              <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none text-gray-400 group-focus-within:text-[#7B51B3] transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+              </div>
+              <input
+                type={showNewPassword ? "text" : "password"}
+                placeholder="New Password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                className="w-full bg-gray-50/50 text-gray-900 border-none ring-1 ring-gray-200 placeholder-gray-400 text-base rounded-2xl py-4 pl-14 pr-14 focus:ring-2 focus:ring-[#7B51B3] focus:bg-white outline-none transition-all shadow-sm"
+                autoComplete="new-password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowNewPassword(!showNewPassword)}
+                className="absolute inset-y-0 right-0 pr-5 flex items-center text-gray-400 hover:text-[#7B51B3] transition-colors"
+              >
+                {showNewPassword ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg>
+                )}
+              </button>
+            </div>
+
+            <button
+              type="submit"
+              disabled={isSubmitting || !email || !oldPassword || !newPassword}
+              className="w-full bg-gradient-to-r from-[#7B51B3] to-[#6A48A3] hover:from-[#6A48A3] hover:to-[#5D3A90] text-white rounded-2xl py-4 font-bold tracking-wide transition-all disabled:opacity-70 disabled:cursor-not-allowed mt-4 shadow-[0_10px_20px_rgba(106,72,163,0.3)] hover:shadow-[0_15px_25px_rgba(106,72,163,0.4)] hover:-translate-y-0.5 active:translate-y-0 flex justify-center items-center"
+            >
+              {isSubmitting ? (
                 <svg className="w-5 h-5 animate-spin" fill="none" viewBox="0 0 24 24">
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                 </svg>
-                Resetting password...
-              </span>
-            ) : (
-              "Reset Password"
-            )}
-          </button>
-        </form>
+              ) : (
+                "Update Password"
+              )}
+            </button>
+          </form>
 
-        {/* Back to Login Link */}
-        <div className="mt-8 pt-6 border-t border-gray-600/30 text-center">
-          <p className="text-sm sm:text-base text-gray-400">
-            Remember your password?{" "}
-            <Link
-              href="/signin"
-              className="text-gray-300 hover:text-white transition-colors font-medium"
-            >
-              Back to Login
-            </Link>
+          <p className="text-center text-sm text-gray-500 mt-8 font-medium">
+            Remembered? <Link href="/signin" className="text-[#7b51b3] hover:text-[#5D3A90] transition-colors">Back to Login</Link>
           </p>
+
         </div>
       </div>
     </div>
