@@ -51,7 +51,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({
     } else {
       Cookies.set("clientCountry", country, { expires: 7 });
     }
-  }, [clientCountry]);
+  }, []);
 
   // Fetch profile to get country if not already set or whenever email changes
   useEffect(() => {

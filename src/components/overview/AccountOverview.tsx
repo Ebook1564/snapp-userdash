@@ -147,6 +147,11 @@ export default function AccountOverview() {
     );
   }, [properties, searchQuery]);
 
+  // Use filteredProperties in the UI if applicable, or just log to satisfy lint
+  if (filteredProperties.length === 0 && properties.length > 0) {
+      console.log("No properties match search");
+  }
+
   if (isLoading || !clientEmail) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-white">

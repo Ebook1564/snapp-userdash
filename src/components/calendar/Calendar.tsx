@@ -1,7 +1,4 @@
 "use client";
-import {
-  EventContentArg,
-} from "@fullcalendar/core";
 
 
 import React from "react";
